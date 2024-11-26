@@ -1,4 +1,5 @@
-﻿using HobbyManagment.Data;
+﻿using HobbyManagement.Commands;
+using HobbyManagment.Data;
 using HobbyManagment.Shared;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -8,19 +9,30 @@ namespace HobbyManagement.Viewmodels;
 
 public class HobbyManagerViewModel : ObservableObjectBase
 {
+    #region Fields
+    
     private readonly ReadOnlyObservableCollection<HobbyViewModel> _hobbies;
     private readonly HobbyManager _hobbyManager = new HobbyManager();
     private readonly ObservableCollection<HobbyViewModel> _underlyingHobbiesCollection;
     private bool isLoadingData;
+
+    #endregion
+
+    #region Constructors    
 
     public HobbyManagerViewModel()
     {
         _underlyingHobbiesCollection = new ObservableCollection<HobbyViewModel>(_hobbyManager.Hobbies.Select(x => new HobbyViewModel(x)).ToList());
         _hobbies = new ReadOnlyObservableCollection<HobbyViewModel>(_underlyingHobbiesCollection);
         _hobbyManager.HobbiesChanged += HobbiesChangedEventHandler;
+        AddHobbyCommand = new RelayCommand(AddHobby, () => true);
 
         LoadDataAsync();
     }
+
+    #endregion
+
+    #region Properties
 
     public ReadOnlyObservableCollection<HobbyViewModel> Hobbies
     {
@@ -49,6 +61,38 @@ public class HobbyManagerViewModel : ObservableObjectBase
             RaisePropertyChanged(nameof(IsLoadingData));
         }
     }
+
+    #endregion
+
+    #region Commands
+
+    public RelayCommand AddHobbyCommand { get; }
+
+    #endregion
+
+    #region CommandMethods 
+
+    private void AddHobby()
+    {
+        var newHobby = new HobbyViewModel(new Hobby("", ""));
+        newHobby.StartEdit();
+        _underlyingHobbiesCollection.Add(newHobby);
+
+        newHobby.OnCancelEditHobby += (sender, hobby) =>
+        {
+            _underlyingHobbiesCollection.Remove(newHobby);
+        };
+
+        newHobby.OnSaveEditHobby += (sender, hobby) =>
+        {
+            _underlyingHobbiesCollection.Remove(newHobby);
+            _hobbyManager.AddHobby(newHobby.GetWrappedHobby());
+        };
+    }
+
+    #endregion
+
+    #region Methods
 
     private void AddHobbies(List<Hobby> hobbies)
     {
@@ -100,6 +144,7 @@ public class HobbyManagerViewModel : ObservableObjectBase
         }
         catch (Exception ex)
         {
+            // TOOD
             Debug.WriteLine(ex.Message);
         }
         finally
@@ -117,7 +162,7 @@ public class HobbyManagerViewModel : ObservableObjectBase
     {
         foreach (Hobby hobby in hobbies)
         {
-            var hobbyToRemove = _underlyingHobbiesCollection.FirstOrDefault(x => x.GetHobby() == hobby);
+            var hobbyToRemove = _underlyingHobbiesCollection.FirstOrDefault(x => x.GetWrappedHobby() == hobby);
 
             if (hobbyToRemove != null)
             {
@@ -125,4 +170,6 @@ public class HobbyManagerViewModel : ObservableObjectBase
             }
         }
     }
+
+    #endregion
 }

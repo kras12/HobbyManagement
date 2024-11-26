@@ -6,18 +6,82 @@
         xmlns:local="clr-namespace:HobbyManagement"
         xmlns:viewmodels="clr-namespace:HobbyManagement.Viewmodels"
         mc:Ignorable="d"
-        Title="Hobby Manager" Height="450" Width="800">
+        Title="Hobby Manager" Height="450" Width="800" MinWidth="700" MinHeight="100">
     <Window.DataContext>
         <viewmodels:HobbyManagerViewModel/>
     </Window.DataContext>
-    <Grid>
-        <ListView ItemsSource="{Binding Hobbies}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
-    </Grid>
+    <Window.Resources>
+
+        <!-- Hobby name display template -->
+        <DataTemplate x:Key="HobbyNameDisplayTemplate">
+            <Grid>
+                <TextBlock x:Name="NameTextBlock" Text="{Binding Name}" Margin="5" Width="150" Visibility="Collapsed"/>
+                <TextBox x:Name="TextBox" Text="{Binding EditName}" Margin="5" Width="150" Visibility="Collapsed"/>
+            </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsEditing, Mode=OneWay}" Value="false">
+                    <Setter TargetName="NameTextBlock" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsEditing, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                    <Setter TargetName="TextBox" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <!-- Hobby description display template -->
+        <DataTemplate x:Key="HobbyDescriptionDisplayTemplate">
+            <Grid>
+                <TextBlock x:Name="DescriptionTextBlock" Text="{Binding Description}" Margin="5" Width="350" MaxHeight="70" TextWrapping="Wrap" Visibility="Collapsed"/>
+                <TextBox x:Name="DescriptionTextbox" Text="{Binding EditDescription}" Margin="5" Width="350" MinLines="3" MaxLines="10" TextWrapping="Wrap" Visibility="Collapsed" 
+                         AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+            </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsEditing, Mode=OneWay}" Value="false">
+                    <Setter TargetName="DescriptionTextBlock" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsEditing, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                    <Setter TargetName="DescriptionTextbox" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <!-- Hobby actions display template -->
+        <DataTemplate x:Key="HobbyActionsDisplayTemplate">
+            <Grid HorizontalAlignment="Stretch">
+                <StackPanel x:Name="HobbyDisplayActions" Orientation="Horizontal" HorizontalAlignment="Stretch" MinWidth="100" Visibility="Collapsed">
+                    <Button Content="Edit" Command="{Binding StartEditHobbyCommand}" CommandParameter="{Binding}"/>
+                </StackPanel>
+                <StackPanel x:Name="HobbyEditActions" Orientation="Horizontal" HorizontalAlignment="Stretch" MinWidth="100" Visibility="Collapsed">
+                    <Button Content="Save" Command="{Binding SaveHobbyCommand}" CommandParameter="{Binding}"/>
+                    <Button Content="Cancel" Command="{Binding CancelEditHobbyCommand}" CommandParameter="{Binding}" Margin="5,0,0,0"/>
+                </StackPanel>
+            </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsEditing}" Value="false">
+                    <Setter TargetName="HobbyDisplayActions" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsEditing}" Value="true">
+                    <Setter TargetName="HobbyEditActions" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </Window.Resources>
+    <Border Padding="5">
+        <Grid>
+            <StackPanel Orientation="Vertical">
+                <ListView x:Name="HobbyList" ItemsSource="{Binding Hobbies}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Name" Width="Auto" CellTemplate="{StaticResource HobbyNameDisplayTemplate}"/>
+                            <GridViewColumn Header="Description" Width="Auto" CellTemplate="{StaticResource HobbyDescriptionDisplayTemplate}" />
+                            <GridViewColumn Header="Actions" Width="Auto" CellTemplate="{StaticResource HobbyActionsDisplayTemplate}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>                
+                <StackPanel x:Name="BottomHobbyActionsPanel" Orientation="Horizontal"  Margin="0,5,0,0">
+                    <Button Content="Add" Command="{Binding AddHobbyCommand}"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
 </Window>
