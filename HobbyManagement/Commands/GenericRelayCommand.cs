@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace TicTacToe.Commands;
+namespace HobbyManagement.Commands;
 
 /// <summary>
 /// Generic relay command class to handle commands with parameters.
