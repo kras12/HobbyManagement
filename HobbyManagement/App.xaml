@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:HobbyManagement"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary Source="/Resources/Brushes.xaml"/>
     </Application.Resources>
 </Application>
