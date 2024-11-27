@@ -38,10 +38,10 @@ public class HobbyManager : ObservableObjectBase
 
     public Task LoadData()
     {
-        _hobbies.Add(new Hobby("Weight Training", "Weight training at the gym."));
-        _hobbies.Add(new Hobby("Programming", "Programming with C# .Net."));
+        _hobbies.Add(new Hobby("Weight Training", "Weight training at the gym."));        
         _hobbies.Add(new Hobby("Movies and TV-series", "Occasionally watching movies and TV-series."));
-        
+        _hobbies.Add(new Hobby("Programming", "Programming with C# .Net."));
+
         return Task.CompletedTask;
     }
 

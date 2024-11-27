@@ -52,8 +52,8 @@
         <Setter Property="View">
             <Setter.Value>
                 <GridView>
-                    <GridViewColumn Header="Name" Width="Auto" CellTemplate="{StaticResource HobbyNameDisplayTemplate}"/>
-                    <GridViewColumn Header="Description" Width="Auto" CellTemplate="{StaticResource HobbyDescriptionDisplayTemplate}" />
+                    <GridViewColumn Header="Name" Width="Auto" HeaderTemplate="{StaticResource SortableGridViewHeader}" CellTemplate="{StaticResource HobbyNameDisplayTemplate}"/>
+                    <GridViewColumn Header="Description" Width="Auto" HeaderTemplate="{StaticResource SortableGridViewHeader}" CellTemplate="{StaticResource HobbyDescriptionDisplayTemplate}" />
                     <GridViewColumn Header="Actions" Width="Auto" CellTemplate="{StaticResource HobbyActionsDisplayTemplate}"/>
                 </GridView>
             </Setter.Value>
