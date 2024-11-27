@@ -3,7 +3,9 @@ using HobbyManagment.Data;
 using HobbyManagment.Shared;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows.Data;
 
 namespace HobbyManagement.Viewmodels;
 
@@ -11,40 +13,57 @@ public class HobbyManagerViewModel : ObservableObjectBase
 {
     #region Fields
     
-    private readonly ReadOnlyObservableCollection<HobbyViewModel> _hobbies;
     private readonly HobbyManager _hobbyManager = new HobbyManager();
-    private readonly ObservableCollection<HobbyViewModel> _underlyingHobbiesCollection;
-    private bool isLoadingData;
+    private readonly ObservableCollection<HobbyViewModel> _hobbies;
+    private bool _isLoadingData;
+    private string _filterText = "";
+    private ICollectionView _hobbiesView;
 
     #endregion
 
-    #region Constructors    
+    #region Constructors
 
     public HobbyManagerViewModel()
     {
-        _underlyingHobbiesCollection = new ObservableCollection<HobbyViewModel>(_hobbyManager.Hobbies.Select(x => new HobbyViewModel(x)).ToList());
-        _hobbies = new ReadOnlyObservableCollection<HobbyViewModel>(_underlyingHobbiesCollection);
+        _hobbies = new ObservableCollection<HobbyViewModel>(_hobbyManager.Hobbies.Select(x => new HobbyViewModel(x)).ToList());
+        HobbiesView = CollectionViewSource.GetDefaultView(_hobbies);
+        HobbiesView.Filter = FilterHobbies;
         _hobbyManager.HobbiesChanged += HobbiesChangedEventHandler;
         AddHobbyCommand = new RelayCommand(AddHobby, () => true);
 
         LoadDataAsync();
-    }
+    }    
 
     #endregion
 
     #region Properties
 
-    public ReadOnlyObservableCollection<HobbyViewModel> Hobbies
+    public string FilterText
     {
         get
         {
-            return _hobbies;
+            return _filterText;
+        }
+
+        set
+        {
+            _filterText = value;
+            RaisePropertyChanged(nameof(FilterText));
+            HobbiesView.Refresh();
+        }
+    }
+
+    public ICollectionView HobbiesView
+    {
+        get
+        {
+            return _hobbiesView;
         }
 
         private init
         {
-            _hobbies = value;
-            RaisePropertyChanged(nameof(Hobbies));
+            _hobbiesView = value;
+            RaisePropertyChanged(nameof(HobbiesView));
         }
     }
 
@@ -52,12 +71,12 @@ public class HobbyManagerViewModel : ObservableObjectBase
     {
         get
         {
-            return isLoadingData;
+            return _isLoadingData;
         }
 
         private set
         {
-            isLoadingData = value;
+            _isLoadingData = value;
             RaisePropertyChanged(nameof(IsLoadingData));
         }
     }
@@ -76,16 +95,17 @@ public class HobbyManagerViewModel : ObservableObjectBase
     {
         var newHobby = new HobbyViewModel(new Hobby("", ""));
         newHobby.StartEdit();
-        _underlyingHobbiesCollection.Add(newHobby);
+        _hobbies.Add(newHobby);
+        RaisePropertyChanged(nameof(HobbiesView));
 
         newHobby.OnCancelEditHobby += (sender, hobby) =>
         {
-            _underlyingHobbiesCollection.Remove(newHobby);
+            _hobbies.Remove(newHobby);
         };
 
         newHobby.OnSaveEditHobby += (sender, hobby) =>
         {
-            _underlyingHobbiesCollection.Remove(newHobby);
+            _hobbies.Remove(newHobby);
             _hobbyManager.AddHobby(newHobby.GetWrappedHobby());
         };
     }
@@ -98,13 +118,25 @@ public class HobbyManagerViewModel : ObservableObjectBase
     {
         foreach (Hobby hobby in hobbies)
         {
-            _underlyingHobbiesCollection.Add(new HobbyViewModel(hobby));
+            _hobbies.Add(new HobbyViewModel(hobby));
         }
     }
 
     private void ClearHobbies()
     {
-        _underlyingHobbiesCollection.Clear();
+        _hobbies.Clear();
+    }
+
+    private bool FilterHobbies(object item)
+    {
+        if (item is HobbyViewModel hobby)
+        {
+            return string.IsNullOrEmpty(FilterText) 
+                || hobby.Name.Contains(_filterText, StringComparison.CurrentCultureIgnoreCase)
+                || hobby.Description.Contains(_filterText, StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        return false;
     }
 
     private void HobbiesChangedEventHandler(object? sender, NotifyCollectionChangedEventArgs e)
@@ -155,18 +187,18 @@ public class HobbyManagerViewModel : ObservableObjectBase
 
     private void MoveHobby(int oldStartingIndex, int newStartingIndex)
     {
-        _underlyingHobbiesCollection.Move(oldStartingIndex, newStartingIndex);
+        _hobbies.Move(oldStartingIndex, newStartingIndex);
     }
 
     private void RemoveHobbies(List<Hobby> hobbies)
     {
         foreach (Hobby hobby in hobbies)
         {
-            var hobbyToRemove = _underlyingHobbiesCollection.FirstOrDefault(x => x.GetWrappedHobby() == hobby);
+            var hobbyToRemove = _hobbies.FirstOrDefault(x => x.GetWrappedHobby() == hobby);
 
             if (hobbyToRemove != null)
             {
-                _underlyingHobbiesCollection.Remove(hobbyToRemove);
+                _hobbies.Remove(hobbyToRemove);
             }
         }
     }
