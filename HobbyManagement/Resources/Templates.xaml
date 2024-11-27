@@ -1,0 +1,57 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Hobby name display template -->
+    <DataTemplate x:Key="HobbyNameDisplayTemplate">
+        <Grid>
+            <TextBlock x:Name="NameTextBlock" Text="{Binding Name}" Margin="5" Width="150" Visibility="Collapsed"/>
+            <TextBox x:Name="TextBox" Text="{Binding EditName}" Margin="5" Width="150" Visibility="Collapsed"/>
+        </Grid>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsEditing, Mode=OneWay}" Value="false">
+                <Setter TargetName="NameTextBlock" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsEditing, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="TextBox" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <!-- Hobby description display template -->
+    <DataTemplate x:Key="HobbyDescriptionDisplayTemplate">
+        <Grid>
+            <TextBlock x:Name="DescriptionTextBlock" Text="{Binding Description}" Margin="5" Width="350" MaxHeight="70" TextWrapping="Wrap" Visibility="Collapsed"/>
+            <TextBox x:Name="DescriptionTextbox" Text="{Binding EditDescription}" Margin="5" Width="350" MinLines="3" MaxLines="10" TextWrapping="Wrap" Visibility="Collapsed" 
+                 AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+        </Grid>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsEditing, Mode=OneWay}" Value="false">
+                <Setter TargetName="DescriptionTextBlock" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsEditing, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="DescriptionTextbox" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <!-- Hobby actions display template -->
+    <DataTemplate x:Key="HobbyActionsDisplayTemplate">
+        <Grid HorizontalAlignment="Stretch">
+            <StackPanel x:Name="HobbyDisplayActions" Orientation="Horizontal" HorizontalAlignment="Stretch" MinWidth="100" Visibility="Collapsed">
+                <Button Content="Edit" Command="{Binding StartEditHobbyCommand}" CommandParameter="{Binding}"/>
+            </StackPanel>
+            <StackPanel x:Name="HobbyEditActions" Orientation="Horizontal" HorizontalAlignment="Stretch" MinWidth="100" Visibility="Collapsed">
+                <Button Content="Save" Command="{Binding SaveHobbyCommand}" CommandParameter="{Binding}"/>
+                <Button Content="Cancel" Command="{Binding CancelEditHobbyCommand}" CommandParameter="{Binding}" Margin="5,0,0,0"/>
+            </StackPanel>
+        </Grid>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsEditing}" Value="false">
+                <Setter TargetName="HobbyDisplayActions" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsEditing}" Value="true">
+                <Setter TargetName="HobbyEditActions" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+</ResourceDictionary>
