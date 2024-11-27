@@ -6,13 +6,14 @@
         xmlns:local="clr-namespace:HobbyManagement"
         xmlns:viewmodels="clr-namespace:HobbyManagement.Viewmodels"
         mc:Ignorable="d"
-        Title="Hobby Manager" Height="450" Width="800" MinWidth="700" MinHeight="100">
+        Title="Hobby Manager" Height="450" Width="800" MinWidth="700" MinHeight="100" Background="{StaticResource DefaultBackgroundBrush}">
     <Window.DataContext>
         <viewmodels:HobbyManagerViewModel/>
     </Window.DataContext>
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Brushes.xaml"/>
                 <ResourceDictionary Source="/Resources/Templates.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
