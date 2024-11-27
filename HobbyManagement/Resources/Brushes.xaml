@@ -4,9 +4,12 @@
     <SolidColorBrush x:Key="DefaultBackgroundBrush" Color="#FFF7FCFF"/>
     <SolidColorBrush x:Key="DefaultElementBackgroundBrush" Color="#FFD8E9F3"/>
 
+    <SolidColorBrush x:Key="ButtonBackground" Color="#FF8BC9F1"/>
+    <SolidColorBrush x:Key="ButtonDisabledBackground" Color="#FF7CB3D6"/>
+    <SolidColorBrush x:Key="ButtonDisabledForeground" Color="WhiteSmoke"/>
     <SolidColorBrush x:Key="ButtonMouseOverBackground" Color="#FFBDDFF5"/>
     <SolidColorBrush x:Key="ButtonMouseOverBorder" Color="#FF6DB2DE"/>
-    <SolidColorBrush x:Key="ButtonBackground" Color="#FF8BC9F1"/>
+    
 
     <SolidColorBrush x:Key="TextBoxBackground" Color="#FFEEF6FB"/>
 </ResourceDictionary>

@@ -23,6 +23,11 @@
                             <Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource ButtonMouseOverBackground}"/>
                             <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{StaticResource ButtonMouseOverBorder}"/>
                         </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource ButtonDisabledBackground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource ButtonDisabledForeground}"/>
+                            <Setter Property="Opacity" Value="0.5"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
