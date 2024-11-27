@@ -5,13 +5,13 @@
     <DataTemplate x:Key="HobbyNameDisplayTemplate">
         <Grid>
             <TextBlock x:Name="NameTextBlock" Text="{Binding Name}" Margin="5" Width="150" Visibility="Collapsed"/>
-            <TextBox x:Name="TextBox" Text="{Binding EditName}" Margin="5" Width="150" Visibility="Collapsed"/>
+            <TextBox x:Name="TextBox" Text="{Binding EditName, UpdateSourceTrigger=PropertyChanged}" Margin="5" Width="150" Visibility="Collapsed"/>
         </Grid>
         <DataTemplate.Triggers>
             <DataTrigger Binding="{Binding IsEditing, Mode=OneWay}" Value="false">
                 <Setter TargetName="NameTextBlock" Property="Visibility" Value="Visible"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding IsEditing, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="true">
+            <DataTrigger Binding="{Binding IsEditing, Mode=TwoWay}" Value="true">
                 <Setter TargetName="TextBox" Property="Visibility" Value="Visible"/>
             </DataTrigger>
         </DataTemplate.Triggers>
@@ -21,14 +21,14 @@
     <DataTemplate x:Key="HobbyDescriptionDisplayTemplate">
         <Grid>
             <TextBlock x:Name="DescriptionTextBlock" Text="{Binding Description}" Margin="5" Width="350" MaxHeight="70" TextWrapping="Wrap" Visibility="Collapsed"/>
-            <TextBox x:Name="DescriptionTextbox" Text="{Binding EditDescription}" Margin="5" Width="350" MinLines="3" MaxLines="10" TextWrapping="Wrap" Visibility="Collapsed" 
+            <TextBox x:Name="DescriptionTextbox" Text="{Binding EditDescription, UpdateSourceTrigger=PropertyChanged}" Margin="5" Width="350" MinLines="3" MaxLines="10" TextWrapping="Wrap" Visibility="Collapsed" 
                  AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
         </Grid>
         <DataTemplate.Triggers>
             <DataTrigger Binding="{Binding IsEditing, Mode=OneWay}" Value="false">
                 <Setter TargetName="DescriptionTextBlock" Property="Visibility" Value="Visible"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding IsEditing, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="true">
+            <DataTrigger Binding="{Binding IsEditing, Mode=TwoWay}" Value="true">
                 <Setter TargetName="DescriptionTextbox" Property="Visibility" Value="Visible"/>
             </DataTrigger>
         </DataTemplate.Triggers>
