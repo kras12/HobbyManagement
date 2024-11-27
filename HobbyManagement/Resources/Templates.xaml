@@ -37,10 +37,10 @@
     <!-- Hobby actions display template -->
     <DataTemplate x:Key="HobbyActionsDisplayTemplate">
         <Grid HorizontalAlignment="Stretch">
-            <StackPanel x:Name="HobbyDisplayActions" Orientation="Horizontal" HorizontalAlignment="Stretch" MinWidth="100" Visibility="Collapsed">
+            <StackPanel x:Name="HobbyDisplayActions" Orientation="Horizontal" HorizontalAlignment="Stretch" MinWidth="120" Visibility="Collapsed">
                 <Button Content="Edit" Command="{Binding StartEditHobbyCommand}" CommandParameter="{Binding}"/>
             </StackPanel>
-            <StackPanel x:Name="HobbyEditActions" Orientation="Horizontal" HorizontalAlignment="Stretch" MinWidth="100" Visibility="Collapsed">
+            <StackPanel x:Name="HobbyEditActions" Orientation="Horizontal" HorizontalAlignment="Stretch" MinWidth="120" Visibility="Collapsed">
                 <Button Content="Save" Command="{Binding SaveHobbyCommand}" CommandParameter="{Binding}"/>
                 <Button Content="Cancel" Command="{Binding CancelEditHobbyCommand}" CommandParameter="{Binding}" Margin="5,0,0,0"/>
             </StackPanel>
