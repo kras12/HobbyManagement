@@ -37,4 +37,8 @@
         <Setter Property="Background" Value="{StaticResource TextBoxBackground}"/>
         <Setter Property="Padding" Value="5,5,5,5"/>
     </Style>
+
+    <Style TargetType="ListView">
+        <Setter Property="Background" Value="{StaticResource DefaultElementBackgroundBrush}"/>
+    </Style>
 </ResourceDictionary>
