@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:HobbyManagement.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Width="auto" d:Width="120" HorizontalAlignment="Stretch">
+    <Grid Width="auto" d:Width="120" HorizontalAlignment="Stretch" d:HorizontalAlignment="Left">
         <StackPanel Orientation="Vertical" Width="auto" HorizontalAlignment="Stretch">
             <TextBlock Text="Find"/>
             <Grid Width="auto" HorizontalAlignment="Stretch">
