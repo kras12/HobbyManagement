@@ -3,6 +3,7 @@ using HobbyManagment.Data;
 using HobbyManagment.Shared;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Windows.Input;
 
 namespace HobbyManagement.Viewmodels;
 
@@ -116,9 +117,9 @@ public class HobbyViewModel : ObservableObjectBase
 
     #region Commands
 
-    public GenericRelayCommand<HobbyViewModel> CancelEditHobbyCommand { get; }
-    public GenericRelayCommand<HobbyViewModel> SaveHobbyCommand { get; }
-    public GenericRelayCommand<HobbyViewModel> StartEditHobbyCommand { get; }
+    public ICommand CancelEditHobbyCommand { get; }
+    public ICommand SaveHobbyCommand { get; }
+    public ICommand StartEditHobbyCommand { get; }
 
     #endregion
 

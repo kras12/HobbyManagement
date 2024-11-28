@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace HobbyManagement.Viewmodels;
 
@@ -119,9 +120,9 @@ public class HobbyManagerViewModel : ObservableObjectBase
 
     #region Commands
 
-    public RelayCommand AddHobbyCommand { get; }
-    public GenericRelayCommand<HobbyViewModel> DeleteHobbyCommand { get; }
-    public GenericRelayCommand<string> SortGridViewByColumnCommand { get; }
+    public ICommand AddHobbyCommand { get; }
+    public ICommand DeleteHobbyCommand { get; }
+    public ICommand SortGridViewByColumnCommand { get; }
 
     #endregion
 
