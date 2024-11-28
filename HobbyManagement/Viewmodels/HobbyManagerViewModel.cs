@@ -16,12 +16,11 @@ public class HobbyManagerViewModel : ObservableObjectBase
 
     private readonly ObservableCollection<HobbyViewModel> _hobbies;
     private readonly HobbyManager _hobbyManager = new HobbyManager();
-    private string _filterText = "";
     private string _gridViewSortedByColumn = "";
     private bool _gridViewSortOrderIsAscending = true;
     private ICollectionView _hobbiesView = default!;
     private bool _isLoadingData;
-
+    private string _searchText = "";
     #endregion
 
     #region Constructors
@@ -39,26 +38,11 @@ public class HobbyManagerViewModel : ObservableObjectBase
 
         SetDefaultHobbyListSorting();
         LoadDataAsync();
-    }    
+    }
 
     #endregion
 
     #region Properties
-
-    public string FilterText
-    {
-        get
-        {
-            return _filterText;
-        }
-
-        set
-        {
-            _filterText = value;
-            RaisePropertyChanged(nameof(FilterText));
-            HobbiesView.Refresh();
-        }
-    }
 
     public string GridViewSortedByColumn
     {
@@ -113,6 +97,21 @@ public class HobbyManagerViewModel : ObservableObjectBase
         {
             _isLoadingData = value;
             RaisePropertyChanged(nameof(IsLoadingData));
+        }
+    }
+
+    public string SearchText
+    {
+        get
+        {
+            return _searchText;
+        }
+
+        set
+        {
+            _searchText = value;
+            RaisePropertyChanged(nameof(SearchText));
+            HobbiesView.Refresh();
         }
     }
 
@@ -222,9 +221,9 @@ public class HobbyManagerViewModel : ObservableObjectBase
     {
         if (item is HobbyViewModel hobby)
         {
-            return string.IsNullOrEmpty(FilterText) 
-                || hobby.Name.Contains(_filterText, StringComparison.CurrentCultureIgnoreCase)
-                || hobby.Description.Contains(_filterText, StringComparison.CurrentCultureIgnoreCase);
+            return string.IsNullOrEmpty(SearchText) 
+                || hobby.Name.Contains(_searchText, StringComparison.CurrentCultureIgnoreCase)
+                || hobby.Description.Contains(_searchText, StringComparison.CurrentCultureIgnoreCase);
         }
 
         return false;
