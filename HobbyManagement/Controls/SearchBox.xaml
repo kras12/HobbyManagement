@@ -8,7 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Width="auto" d:Width="120" HorizontalAlignment="Stretch" d:HorizontalAlignment="Left">
         <StackPanel Orientation="Vertical" Width="auto" HorizontalAlignment="Stretch">
-            <TextBlock Text="Find"/>
+            <TextBlock Text="Filter"/>
             <Grid Width="auto" HorizontalAlignment="Stretch">
                 <TextBox HorizontalAlignment="Stretch" Text="{Binding SearchText, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=200}" />
                 <Button Content="X" Foreground="Black" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding ClearSearchCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
