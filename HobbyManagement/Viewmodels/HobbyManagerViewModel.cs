@@ -32,8 +32,8 @@ public class HobbyManagerViewModel : ObservableObjectBase
         HobbiesView.Filter = FilterHobbies;
         ((ListCollectionView)HobbiesView).CustomSort = Comparer<HobbyViewModel>.Create(CompareHobbySortOrder);
         _hobbyManager.HobbiesChanged += HobbiesChangedEventHandler;
-        SortGridViewByColumnCommand = new GenericRelayCommand<string>(SortHobbyList, (_) => true);
-        AddHobbyCommand = new RelayCommand(AddEmptyHobby, () => true);
+        SortGridViewByColumnCommand = new GenericRelayCommand<string>(SortHobbyList);
+        AddHobbyCommand = new RelayCommand(AddEmptyHobby);
         DeleteHobbyCommand = new GenericRelayCommand<HobbyViewModel>(DeleteHobby, CanDeleteHobby);
 
         SetDefaultHobbyListSorting();

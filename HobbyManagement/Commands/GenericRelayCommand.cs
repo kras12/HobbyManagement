@@ -13,7 +13,7 @@ public class GenericRelayCommand<T> : ICommand
     /// <summary>
     /// Delegate for a function that returns true if the command can be executed. 
     /// </summary>
-    private readonly Func<T, bool> _canExecute;
+    private readonly Func<T, bool>? _canExecute;
 
     /// <summary>
     /// Delegate for an action taking a parameter of type <see cref="T"/> and executes the command.
@@ -29,7 +29,7 @@ public class GenericRelayCommand<T> : ICommand
     /// </summary>
     /// <param name="execute">Delegate for an action taking a parameter of type <see cref="T"/> and executes the action.</param>
     /// <param name="canExecute">Delegate for a function that returns true if the command can be executed. </param>
-    public GenericRelayCommand(Action<T> execute, Func<T, bool> canExecute)
+    public GenericRelayCommand(Action<T> execute, Func<T, bool>? canExecute = null)
     {
         _execute = execute;
         _canExecute = canExecute;
@@ -53,7 +53,17 @@ public class GenericRelayCommand<T> : ICommand
     /// <inheritdoc/>
     public bool CanExecute(object? input)
     {
-        return input != null && _canExecute((T)input);
+        if (_canExecute == null)
+        {
+            return true;
+        }
+
+        if (!(input is T))
+        {
+            return false;
+        }
+
+        return _canExecute((T)input!);  
     }
 
     /// <inheritdoc/>

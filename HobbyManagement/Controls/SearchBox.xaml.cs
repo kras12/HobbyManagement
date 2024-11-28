@@ -18,7 +18,7 @@ namespace HobbyManagement.Controls
             InitializeComponent();
         }
 
-        public ICommand ClearSearchCommand => new RelayCommand(ClearSearch, () => true);
+        public ICommand ClearSearchCommand => new RelayCommand(ClearSearch);
 
         public string SearchText
         {

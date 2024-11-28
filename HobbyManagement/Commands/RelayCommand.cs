@@ -12,7 +12,7 @@ public class RelayCommand : ICommand
     /// <summary>
     /// Delegate for a function that returns true if the command can be executed. 
     /// </summary>
-    private readonly Func<bool> _canExecute;
+    private readonly Func<bool>? _canExecute;
 
     /// <summary>
     /// Delegate for a parameterless action that executes the command.
@@ -28,7 +28,7 @@ public class RelayCommand : ICommand
     /// </summary>
     /// <param name="execute">Delegate for a parameterless action that executes the command.</param>
     /// <param name="canExecute">Delegate for a function that returns true if the command can be executed. </param>
-    public RelayCommand(Action execute, Func<bool> canExecute)
+    public RelayCommand(Action execute, Func<bool>? canExecute = null)
     {
         _execute = execute;
         _canExecute = canExecute;
@@ -52,6 +52,11 @@ public class RelayCommand : ICommand
     /// <inheritdoc/>
     public bool CanExecute(object? input)
     {
+        if (_canExecute == null)
+        {
+            return true;
+        }
+
         return _canExecute();
     }
 
