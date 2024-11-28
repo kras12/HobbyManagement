@@ -69,7 +69,6 @@
                         <Path x:Name="SortIcon" Data="M 0 0 L 10 0 L 5 5 Z" Visibility="Collapsed" Fill="Black" Margin="5,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
                     <ControlTemplate.Triggers>
-                        <!-- Ascending sort order -->
                         <DataTrigger Value="true">
                             <DataTrigger.Binding>
                                 <MultiBinding Converter="{StaticResource MultiValueEqualityConverter}">
