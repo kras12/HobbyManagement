@@ -1,6 +1,8 @@
 ﻿using HobbyManagement.Commands;
 using HobbyManagment.Data;
 using HobbyManagment.Shared;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace HobbyManagement.Viewmodels;
 
@@ -37,6 +39,7 @@ public class HobbyViewModel : ObservableObjectBase
 
     #region Properties
 
+    [Required]
     public string Description
     {
         get
@@ -92,6 +95,7 @@ public class HobbyViewModel : ObservableObjectBase
         }
     }
 
+    [Required]
     public string Name
     {
         get
@@ -172,6 +176,32 @@ public class HobbyViewModel : ObservableObjectBase
     public Hobby GetWrappedHobby()
     {
         return _wrappedHobby;
+    }
+
+    public bool IsEmpty()
+    {
+        foreach (PropertyInfo property in typeof(HobbyViewModel).GetProperties())
+        { 
+            if (Attribute.IsDefined(property, typeof(RequiredAttribute)))
+            {
+                var value = property.GetValue(this);
+                var defaultValue = property.PropertyType.IsValueType ? Activator.CreateInstance(property.PropertyType) : null;
+
+                if (property.PropertyType == typeof(string))
+                {
+                    if (!string.IsNullOrEmpty(value as string))
+                    {
+                        return false;
+                    }
+                }
+                else if (!Equals(value, defaultValue))
+                {
+                    return false;
+                }
+            } 
+        }
+
+        return true;
     }
 
     public void StartEdit()
