@@ -1,10 +1,15 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="BaseResources.xaml"/>
+        <ResourceDictionary Source="../Global/GlobalConverters.xaml"/>
+        <ResourceDictionary Source="../Global/GlobalStyles.xaml"/>        
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- Hobby name display template -->
+    <!--===================================================================
+    Templates
+    ====================================================================--> 
+    
+    <!-- Hobby name -->
     <DataTemplate x:Key="HobbyNameDisplayTemplate">
         <Grid>
             <TextBlock x:Name="NameTextBlock" Text="{Binding Name}" Margin="5" Width="150" Visibility="Collapsed"/>
@@ -20,12 +25,12 @@
         </DataTemplate.Triggers>
     </DataTemplate>
 
-    <!-- Hobby description display template -->
+    <!-- Hobby description -->
     <DataTemplate x:Key="HobbyDescriptionDisplayTemplate">
         <Grid>
             <TextBlock x:Name="DescriptionTextBlock" Text="{Binding Description}" Margin="5" Width="350" MaxHeight="70" TextWrapping="Wrap" Visibility="Collapsed"/>
             <TextBox x:Name="DescriptionTextbox" Text="{Binding EditDescription, UpdateSourceTrigger=PropertyChanged}" Margin="5" Width="350" MinLines="3" MaxLines="10" TextWrapping="Wrap" Visibility="Collapsed" 
-                 AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+         AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
         </Grid>
         <DataTemplate.Triggers>
             <DataTrigger Binding="{Binding IsEditing, Mode=OneWay}" Value="false">
@@ -37,7 +42,7 @@
         </DataTemplate.Triggers>
     </DataTemplate>
 
-    <!-- Hobby actions display template -->
+    <!-- Hobby actions -->
     <DataTemplate x:Key="HobbyActionsDisplayTemplate">
         <Grid HorizontalAlignment="Stretch">
             <StackPanel x:Name="HobbyDisplayActions" Orientation="Horizontal" HorizontalAlignment="Stretch" MinWidth="120" Visibility="Collapsed">
@@ -58,10 +63,10 @@
         </DataTemplate.Triggers>
     </DataTemplate>
 
-    <!-- Sortable column header for GridView -->
+    <!-- Sortable column -->
     <DataTemplate x:Key="SortableGridViewHeader">
         <Button x:Name="HeaderButton" Content="{Binding}" 
-                Command="{Binding DataContext.SortGridViewByColumnCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
+        Command="{Binding DataContext.SortGridViewByColumnCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="Transparent" >
@@ -86,4 +91,21 @@
             </Button.Template>
         </Button>
     </DataTemplate>
+
+    <!--===================================================================
+    Styles
+    ====================================================================-->
+    
+    <!-- Hobby list -->
+    <Style x:Key="HobbyListGridView" TargetType="ListView">
+        <Setter Property="View">
+            <Setter.Value>
+                <GridView>
+                    <GridViewColumn Header="Name" Width="Auto" HeaderTemplate="{StaticResource SortableGridViewHeader}" CellTemplate="{StaticResource HobbyNameDisplayTemplate}"/>
+                    <GridViewColumn Header="Description" Width="Auto" HeaderTemplate="{StaticResource SortableGridViewHeader}" CellTemplate="{StaticResource HobbyDescriptionDisplayTemplate}" />
+                    <GridViewColumn Header="Actions" Width="Auto" CellTemplate="{StaticResource HobbyActionsDisplayTemplate}"/>
+                </GridView>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
