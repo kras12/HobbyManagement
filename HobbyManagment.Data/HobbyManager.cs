@@ -31,6 +31,11 @@ public class HobbyManager : ObservableObjectBase
         _hobbies.Add(hobby);
     }
 
+    public void DeleteHobby(Hobby hobby)
+    {
+        _hobbies.Remove(hobby);
+    }
+
     public void ClearHobbies()
     {
         _hobbies.Clear();

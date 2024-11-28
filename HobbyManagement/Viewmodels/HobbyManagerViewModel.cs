@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows;
 using System.Windows.Data;
 
 namespace HobbyManagement.Viewmodels;
@@ -31,8 +32,9 @@ public class HobbyManagerViewModel : ObservableObjectBase
         HobbiesView = CollectionViewSource.GetDefaultView(_hobbies);
         HobbiesView.Filter = FilterHobbies;
         _hobbyManager.HobbiesChanged += HobbiesChangedEventHandler;
-        AddHobbyCommand = new RelayCommand(AddHobby, () => true);
         SortGridViewByColumnCommand = new GenericRelayCommand<string>(SortHobbyList, (_) => true);
+        AddHobbyCommand = new RelayCommand(AddHobby, () => true);
+        DeleteHobbyCommand = new GenericRelayCommand<HobbyViewModel>(DeleteHobby, CanDeleteHobby);        
 
         LoadDataAsync();
     }    
@@ -117,7 +119,7 @@ public class HobbyManagerViewModel : ObservableObjectBase
     #region Commands
 
     public RelayCommand AddHobbyCommand { get; }
-
+    public GenericRelayCommand<HobbyViewModel> DeleteHobbyCommand { get; }
     public GenericRelayCommand<string> SortGridViewByColumnCommand { get; }
 
     #endregion
@@ -143,9 +145,21 @@ public class HobbyManagerViewModel : ObservableObjectBase
         };
     }
 
-    #endregion
+    private bool CanDeleteHobby(HobbyViewModel hobby)
+    {
+        return hobby != null;
+    }
 
-    #region CommandMethods
+    private void DeleteHobby(HobbyViewModel hobby)
+    {
+        if (CanDeleteHobby(hobby))
+        {
+            if (MessageBox.Show("Are you sure you want to delete this hobby?", "Confirm Action", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                _hobbyManager.DeleteHobby(hobby.GetWrappedHobby());
+            }            
+        }
+    }
 
     private void SortHobbyList(string columnName)
     {
