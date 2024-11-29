@@ -7,10 +7,7 @@
         xmlns:viewmodels="clr-namespace:HobbyManagement.Viewmodels"
         xmlns:controls="clr-namespace:HobbyManagement.Controls"
         mc:Ignorable="d"
-        Title="Hobby Manager" Height="450" Width="800" MinWidth="700" MinHeight="100" Background="{StaticResource DefaultBackgroundBrush}">
-    <Window.DataContext>
-        <viewmodels:HobbyManagerViewModel/>
-    </Window.DataContext>
+        Title="Hobby Manager" Height="450" Width="800" MinWidth="700" MinHeight="100" >
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

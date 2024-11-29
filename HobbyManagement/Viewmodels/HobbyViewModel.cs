@@ -7,23 +7,22 @@ using System.Windows.Input;
 
 namespace HobbyManagement.Viewmodels;
 
-public class HobbyViewModel : ObservableObjectBase
+public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
 {
     #region Fields
 
-    private string _editDescription;
-    private string _editName;
+    private string _editDescription = "";
+    private string _editName = "";
     private bool _isEditing;
-    private Hobby _wrappedHobby;
+    private Hobby _wrappedHobby = default!;
+
     #endregion
 
     #region Constructors
 
-    public HobbyViewModel(Hobby hobby)
+    public HobbyViewModel()
     {
-        _wrappedHobby = hobby;
-        _wrappedHobby.PropertyChanged += HobbyPropertyChangedEventHandler;
-
+        SetWrappedHobby(new Hobby() { Name = "New Hobby"});
         SaveHobbyCommand = new GenericRelayCommand<HobbyViewModel>(SaveEdit, CanSave);
         StartEditHobbyCommand = new GenericRelayCommand<HobbyViewModel>(StartEdit, CanStartEdit);
         CancelEditHobbyCommand = new GenericRelayCommand<HobbyViewModel>(CancelEdit, CanCancelEdit);
@@ -45,12 +44,12 @@ public class HobbyViewModel : ObservableObjectBase
     {
         get
         {
-            return _wrappedHobby.Description;
+            return WrappedHobby.Description;
         }
 
         set
         {
-            _wrappedHobby.Description = value;
+            WrappedHobby.Description = value;
         }
     }
 
@@ -84,8 +83,8 @@ public class HobbyViewModel : ObservableObjectBase
 
     public bool IsEditing
     {
-        get 
-        { 
+        get
+        {
             return _isEditing;
         }
 
@@ -101,17 +100,41 @@ public class HobbyViewModel : ObservableObjectBase
     {
         get
         {
-            return _wrappedHobby.Name;
+            return WrappedHobby.Name;
         }
 
         set
         {
-            _wrappedHobby.Name = value;
+            WrappedHobby.Name = value;
         }
     }
 
     private bool CanCancelEditing => IsEditing;
     private bool CanStartEditing => !IsEditing;
+
+    private Hobby WrappedHobby
+    {
+        get
+        {
+            return _wrappedHobby;
+        }
+
+        set
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(WrappedHobby));
+            }
+
+            if (_wrappedHobby != null)
+            { 
+                _wrappedHobby.PropertyChanged -= HobbyPropertyChangedEventHandler;
+            }
+
+            _wrappedHobby = value;
+            _wrappedHobby.PropertyChanged += HobbyPropertyChangedEventHandler;
+        }
+    }
 
     #endregion
 
@@ -176,13 +199,13 @@ public class HobbyViewModel : ObservableObjectBase
 
     public Hobby GetWrappedHobby()
     {
-        return _wrappedHobby;
+        return WrappedHobby;
     }
 
     public bool IsEmpty()
     {
         foreach (PropertyInfo property in typeof(HobbyViewModel).GetProperties())
-        { 
+        {
             if (Attribute.IsDefined(property, typeof(RequiredAttribute)))
             {
                 var value = property.GetValue(this);
@@ -199,10 +222,15 @@ public class HobbyViewModel : ObservableObjectBase
                 {
                     return false;
                 }
-            } 
+            }
         }
 
         return true;
+    }
+
+    public void SetWrappedHobby(Hobby hobby)
+    {
+        WrappedHobby = hobby ?? throw new ArgumentNullException(nameof(hobby));
     }
 
     public void StartEdit()

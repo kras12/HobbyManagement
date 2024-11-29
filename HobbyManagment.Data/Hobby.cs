@@ -1,4 +1,5 @@
 ﻿using HobbyManagment.Shared;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HobbyManagment.Data;
 
@@ -7,13 +8,19 @@ public class Hobby : ObservableObjectBase
     private string name = "";
     private string description = "";
 
+    public Hobby()
+    {
+        
+    }
+
+    [SetsRequiredMembers]
     public Hobby(string name, string description)
     {
         Name = name;
         Description = description;
     }
 
-    public string Name
+    public required string Name
     {
         get
         {
