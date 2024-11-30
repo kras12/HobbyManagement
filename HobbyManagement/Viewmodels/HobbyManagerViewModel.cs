@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace HobbyManagement.Viewmodels;
 
@@ -25,6 +26,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     private ICollectionView _hobbiesView = default!;
     private bool _isLoadingData;
     private string _searchText = "";
+    private ObservableCollection<NotificationMessage> _notifications = new();
     private readonly IHobbyViewModelFactory _hobbyViewModelFactory;
 
     #endregion
@@ -44,6 +46,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         SortGridViewByColumnCommand = new GenericRelayCommand<string>(SortHobbyList);
         AddHobbyCommand = new RelayCommand(AddEmptyHobby);
         DeleteHobbyCommand = new GenericRelayCommand<IHobbyViewModel>(DeleteHobby, CanDeleteHobby);
+        RemoveNotificationCommand = new GenericRelayCommand<NotificationMessage>(RemoveNotification);
 
         SetDefaultHobbyListSorting();
         LoadDataAsync();
@@ -96,6 +99,20 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         }
     }
 
+    public ObservableCollection<NotificationMessage> Notifications
+    {
+        get
+        {
+            return _notifications;
+        }
+
+        set
+        {
+            _notifications = value;
+            RaisePropertyChanged(nameof(Notifications));
+        }
+    }
+
     public bool IsLoadingData
     {
         get
@@ -131,6 +148,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 
     public ICommand AddHobbyCommand { get; }
     public ICommand DeleteHobbyCommand { get; }
+    public ICommand RemoveNotificationCommand { get; }
     public ICommand SortGridViewByColumnCommand { get; }
 
     #endregion
@@ -152,6 +170,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         {
             _hobbies.Remove(newHobby);
             _hobbyManager.AddHobby(newHobby.GetWrappedHobby());
+            ShowNotification("Created hobby.");
         };
     }
 
@@ -167,8 +186,14 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
             if (MessageBox.Show("Are you sure you want to delete this hobby?", "Confirm Action", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 _hobbyManager.DeleteHobby(hobby.GetWrappedHobby());
+                ShowNotification("Deleted hobby.");
             }
         }
+    }
+
+    private void RemoveNotification(NotificationMessage notification)
+    {
+        _notifications.Remove(notification);
     }
 
     private void SortHobbyList(string columnName)
@@ -186,13 +211,33 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     {
         foreach (Hobby hobby in hobbies)
         {
-            _hobbies.Add(_mapper.Map<IHobbyViewModel>(hobby));
+            var newHobbyViewModel = _mapper.Map<IHobbyViewModel>(hobby);
+            newHobbyViewModel.OnSaveEditHobby += (_, _) =>
+            {
+                ShowNotification("Hobby updated.");
+            };
+
+            _hobbies.Add(newHobbyViewModel);
         }
     }
 
     private void ClearHobbies()
     {
         _hobbies.Clear();
+    }
+
+    private void ShowNotification(string message)
+    {
+        var notification = new NotificationMessage(message);
+        _notifications.Insert(0, notification);
+
+        var timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(2) };
+        timer.Tick += (sender, e) =>
+        {
+            _notifications.Remove(notification);
+            timer.Stop();
+        };
+        timer.Start();
     }
 
     private int CompareHobbySortOrder(IHobbyViewModel hobbyA, IHobbyViewModel hobbyB)

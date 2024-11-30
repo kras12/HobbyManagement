@@ -5,9 +5,10 @@
     </ResourceDictionary.MergedDictionaries>
 
     <ControlTemplate x:Key="DefaultButtonTemplate" TargetType="Button">
-        <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" Opacity="{TemplateBinding Opacity}" BorderThickness="1" CornerRadius="5" Padding="10,4,10,4">
+        <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" 
+                Opacity="{TemplateBinding Opacity}" Padding="{TemplateBinding Padding}">
             <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.Foreground="{TemplateBinding Foreground}"/>
-        </Border>        
+        </Border>
     </ControlTemplate>
 
     <Style TargetType="Button" >
@@ -18,7 +19,9 @@
         </Style.Resources>
         <Setter Property="OverridesDefaultStyle" Value="True"/>
         <Setter Property="Background" Value="{StaticResource ButtonBackground}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ButtonBackground}"/>
         <Setter Property="Template" Value="{StaticResource DefaultButtonTemplate}"/>
+        <Setter Property="Padding" Value="10,4,10,4"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource ButtonMouseOverBackground}"/>
@@ -38,6 +41,26 @@
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="#FFF18D8D"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#CC000000"/>
+        <Setter Property="BorderBrush" Value="#CC000000"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Padding" Value="0"/>
+        <Style.Resources>
+            <Style TargetType="Border">
+                <Setter Property="CornerRadius" Value="100"/>
+            </Style>
+        </Style.Resources>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource ButtonMouseOverBorder}"/>
+                <Setter Property="Foreground" Value="White"/>
             </Trigger>
         </Style.Triggers>
     </Style>

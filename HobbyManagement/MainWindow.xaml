@@ -17,8 +17,9 @@
     </Window.Resources>
     <Border Padding="5">
         <Grid>
-            <DockPanel>
+            <DockPanel LastChildFill="True">
                 <controls:SearchBox DockPanel.Dock="Top" SearchText="{Binding SearchText, Mode=TwoWay}" Width="200" HorizontalAlignment="Left"/>
+                <controls:NotificationControl DockPanel.Dock="Bottom" Notifications="{Binding Notifications}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 <ListView DockPanel.Dock="Top" x:Name="HobbyList" ItemsSource="{Binding HobbiesView}" Margin="0,10,0,0" Style="{StaticResource HobbyListGridView}"/>
             </DockPanel>
         </Grid>

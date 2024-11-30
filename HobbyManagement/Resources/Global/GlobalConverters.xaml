@@ -4,4 +4,5 @@
 
     <!-- Converters -->
     <converters:MultiValueEqualityConverter x:Key="MultiValueEqualityConverter"/>
+    <converters:CollectionCountToVisbilityConverter x:Key="CollectionCountToVisbilityConverter"/>
 </ResourceDictionary>
