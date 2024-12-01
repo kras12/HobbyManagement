@@ -14,8 +14,9 @@ public class Hobby : ObservableObjectBase
     }
 
     [SetsRequiredMembers]
-    public Hobby(string name, string description)
+    public Hobby(int id, string name, string description)
     {
+        Id = id;
         Name = name;
         Description = description;
     }
@@ -47,4 +48,6 @@ public class Hobby : ObservableObjectBase
             RaisePropertyChanged(nameof(Description));
         }
     }
+
+    public int Id { get; private init; }
 }
