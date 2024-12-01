@@ -19,11 +19,11 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     #region Fields
 
     private readonly IMapper _mapper;
-    private readonly ObservableCollection<IHobbyViewModel> _hobbies;
+    private readonly ObservableCollection<IHobbyViewModel> _hobbiesCollection;
     private readonly HobbyManager _hobbyManager = new HobbyManager();
     private string _gridViewSortedByColumn = "";
     private bool _gridViewSortOrderIsAscending = true;
-    private ICollectionView _hobbiesView = default!;
+    private ICollectionView _hobbies = default!;
     private bool _isLoadingData;
     private string _searchText = "";
     private ObservableCollection<NotificationMessage> _notifications = new();
@@ -38,10 +38,10 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         _hobbyViewModelFactory = hobbyViewModelFactory;
         _mapper = mapper;
 
-        _hobbies = new ObservableCollection<IHobbyViewModel>();
-        HobbiesView = CollectionViewSource.GetDefaultView(_hobbies);
-        HobbiesView.Filter = FilterHobbies;
-        ((ListCollectionView)HobbiesView).CustomSort = Comparer<IHobbyViewModel>.Create(CompareHobbySortOrder);
+        _hobbiesCollection = new ObservableCollection<IHobbyViewModel>();
+        Hobbies = CollectionViewSource.GetDefaultView(_hobbiesCollection);
+        Hobbies.Filter = FilterHobbies;
+        ((ListCollectionView)Hobbies).CustomSort = Comparer<IHobbyViewModel>.Create(CompareHobbySortOrder);
         _hobbyManager.HobbiesChanged += HobbiesChangedEventHandler;
         SortGridViewByColumnCommand = new GenericRelayCommand<string>(SortHobbyList);
         AddHobbyCommand = new RelayCommand(AddEmptyHobby);
@@ -85,17 +85,17 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         }
     }
 
-    public ICollectionView HobbiesView
+    public ICollectionView Hobbies
     {
         get
         {
-            return _hobbiesView;
+            return _hobbies;
         }
 
         private init
         {
-            _hobbiesView = value;
-            RaisePropertyChanged(nameof(HobbiesView));
+            _hobbies = value;
+            RaisePropertyChanged(nameof(Hobbies));
         }
     }
 
@@ -138,7 +138,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         {
             _searchText = value;
             RaisePropertyChanged(nameof(SearchText));
-            HobbiesView.Refresh();
+            Hobbies.Refresh();
         }
     }
 
@@ -159,7 +159,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     {
         var newHobby = _hobbyViewModelFactory.CreateHobbyViewModel();
         newHobby.StartEdit();
-        _hobbies.Add(newHobby);
+        _hobbiesCollection.Add(newHobby);
 
         newHobby.OnCancelEditHobby += (sender, hobby) =>
         {
@@ -200,7 +200,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     {
         GridViewSortOrderIsAscending = !GridViewSortOrderIsAscending;
         GridViewSortedByColumn = columnName;
-        HobbiesView.Refresh();
+        Hobbies.Refresh();
     }
 
     #endregion
@@ -217,13 +217,13 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
                 ShowNotification("Hobby updated.");
             };
 
-            _hobbies.Add(newHobbyViewModel);
+            _hobbiesCollection.Add(newHobbyViewModel);
         }
     }
 
     private void ClearHobbies()
     {
-        _hobbies.Clear();
+        _hobbiesCollection.Clear();
     }
 
     private void ShowNotification(string message)
@@ -332,18 +332,18 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 
     private void MoveHobby(int oldStartingIndex, int newStartingIndex)
     {
-        _hobbies.Move(oldStartingIndex, newStartingIndex);
+        _hobbiesCollection.Move(oldStartingIndex, newStartingIndex);
     }
 
     private void RemoveHobbies(List<Hobby> hobbies)
     {
         foreach (Hobby hobby in hobbies)
         {
-            var hobbyToRemove = _hobbies.FirstOrDefault(x => x.GetWrappedHobby() == hobby);
+            var hobbyToRemove = _hobbiesCollection.FirstOrDefault(x => x.GetWrappedHobby() == hobby);
 
             if (hobbyToRemove != null)
             {
-                _hobbies.Remove(hobbyToRemove);
+                _hobbiesCollection.Remove(hobbyToRemove);
             }
         }
     }
@@ -352,7 +352,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     {
         GridViewSortedByColumn = nameof(IHobbyViewModel.Name);
         GridViewSortOrderIsAscending = true;
-        HobbiesView.Refresh();
+        Hobbies.Refresh();
     }
 
     #endregion

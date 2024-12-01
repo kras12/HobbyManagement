@@ -13,7 +13,7 @@
         <Grid>
             <DockPanel LastChildFill="True">
                 <controls:SearchBox DockPanel.Dock="Top" SearchText="{Binding SearchText, Mode=TwoWay}" Width="200" HorizontalAlignment="Left"/>
-                <hobbylistcontrols:HobbyListControl Hobbies="{Binding HobbiesView}" Notifications="{Binding Notifications}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                <hobbylistcontrols:HobbyListControl Hobbies="{Binding Hobbies}" Notifications="{Binding Notifications}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     GridViewSortedByColumn="{Binding GridViewSortedByColumn}" IsGridViewSortOrderAscending="{Binding GridViewSortOrderIsAscending}"
                     AddHobbyCommand="{Binding AddHobbyCommand}" CancelEditHobbyCommand="{Binding CancelEditHobbyCommand}" DeleteHobbyCommand="{Binding DeleteHobbyCommand}" 
                     RemoveNotificationCommand="{Binding RemoveNotificationCommand}" SaveHobbyCommand="{Binding SaveHobbyCommand}" 
