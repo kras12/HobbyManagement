@@ -17,7 +17,7 @@
     <DataTemplate x:Key="HobbyNameDisplayTemplate">
         <Grid>
             <TextBlock x:Name="NameTextBlock" Text="{Binding Name}" Margin="5" Width="150" Visibility="Collapsed"/>
-            <TextBox x:Name="TextBox" Text="{Binding EditName, UpdateSourceTrigger=PropertyChanged}" Margin="5" Width="150" Visibility="Collapsed"/>
+            <TextBox x:Name="TextBox" Text="{Binding EditHobbyData.EditName, UpdateSourceTrigger=PropertyChanged}" Margin="5" Width="150" Visibility="Collapsed"/>
         </Grid>
         <DataTemplate.Triggers>
             <DataTrigger Binding="{Binding IsEditing, Mode=OneWay}" Value="false">
@@ -33,7 +33,7 @@
     <DataTemplate x:Key="HobbyDescriptionDisplayTemplate">
         <Grid>
             <TextBlock x:Name="DescriptionTextBlock" Text="{Binding Description}" Margin="5" Width="350" MaxHeight="70" TextWrapping="Wrap" Visibility="Collapsed"/>
-            <TextBox x:Name="DescriptionTextbox" Text="{Binding EditDescription, UpdateSourceTrigger=PropertyChanged}" Margin="5" Width="350" MinLines="3" MaxLines="10" TextWrapping="Wrap" Visibility="Collapsed" 
+            <TextBox x:Name="DescriptionTextbox" Text="{Binding EditHobbyData.EditDescription, UpdateSourceTrigger=PropertyChanged}" Margin="5" Width="350" MinLines="3" MaxLines="10" TextWrapping="Wrap" Visibility="Collapsed" 
          AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
         </Grid>
         <DataTemplate.Triggers>

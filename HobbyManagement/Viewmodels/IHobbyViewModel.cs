@@ -4,12 +4,11 @@ namespace HobbyManagement.Viewmodels;
 
 public interface IHobbyViewModel
 {
-    string Description { get; set; }
-    string EditDescription { get; set; }
-    string EditName { get; set; }
+    string Description { get; }
+    IEditHobbyViewModel? EditHobbyData { get; }
+    int Id { get; }
     bool IsEditing { get; set; }
-    string Name { get; set; }
-    Hobby GetWrappedHobby();
+    string Name { get; }
     bool IsEmpty();
     void SetWrappedHobby(Hobby hobby);
     void StartEdit();

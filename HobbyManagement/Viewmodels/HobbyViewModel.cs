@@ -1,4 +1,5 @@
-﻿using HobbyManagment.Data;
+﻿using AutoMapper;
+using HobbyManagment.Data;
 using HobbyManagment.Shared;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
@@ -9,18 +10,19 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
 {
     #region Fields
 
-    private string _editDescription = "";
-    private string _editName = "";
+    private readonly IMapper _mapper;
     private bool _isEditing;
     private Hobby _wrappedHobby = default!;
+    private IEditHobbyViewModel? editHobbyData;
 
     #endregion
 
     #region Constructors
 
-    public HobbyViewModel()
+    public HobbyViewModel(IMapper mapper)
     {
-        SetWrappedHobby(new Hobby() { Name = ""});
+        _mapper = mapper;
+        SetWrappedHobby(new Hobby() { Name = "", Description = ""});
     }
 
     #endregion
@@ -34,40 +36,23 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         {
             return WrappedHobby.Description;
         }
-
-        set
-        {
-            WrappedHobby.Description = value;
-        }
     }
 
-    public string EditDescription
+    public IEditHobbyViewModel? EditHobbyData
     {
         get
         {
-            return _editDescription;
+            return editHobbyData;
         }
 
-        set
+        private set
         {
-            _editDescription = value;
-            RaisePropertyChanged(nameof(EditDescription));
+            editHobbyData = value;
+            RaisePropertyChanged(nameof(EditHobbyData));
         }
     }
 
-    public string EditName
-    {
-        get
-        {
-            return _editName;
-        }
-
-        set
-        {
-            _editName = value;
-            RaisePropertyChanged(nameof(EditName));
-        }
-    }
+    public int Id => WrappedHobby.Id;
 
     public bool IsEditing
     {
@@ -89,11 +74,6 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         get
         {
             return WrappedHobby.Name;
-        }
-
-        set
-        {
-            WrappedHobby.Name = value;
         }
     }
 
@@ -134,13 +114,9 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
     {
         // TODO - Implement better validation and messaging methods. 
         return IsEditing
-            && !string.IsNullOrEmpty(EditName)
-            && !string.IsNullOrEmpty(EditDescription);
-    }
-
-    public Hobby GetWrappedHobby()
-    {
-        return WrappedHobby;
+            && EditHobbyData != null
+            && !string.IsNullOrEmpty(EditHobbyData.EditName)
+            && !string.IsNullOrEmpty(EditHobbyData.EditDescription);
     }
 
     public bool IsEmpty()
@@ -169,10 +145,17 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         return true;
     }
 
-    public void SaveEdit()
+    public Hobby SaveEdit()
     {
-        ReplaceValuesWithEditValues();
+        if (!IsEditing || EditHobbyData == null)
+        {
+            throw new InvalidOperationException("Can't save edit when not editing.");
+        }
+
+        var result = _mapper.Map<IEditHobbyViewModel, Hobby>(EditHobbyData);
         EndEdit();
+
+        return result;
     }
 
     public void SetWrappedHobby(Hobby hobby)
@@ -182,14 +165,13 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
 
     public void StartEdit()
     {
-        InitEditValues();
+        EditHobbyData = _mapper.Map<IHobbyViewModel, IEditHobbyViewModel>(this);
         IsEditing = true;
     }
 
     private void EndEdit()
     {
-        EditName = "";
-        EditDescription = "";
+        EditHobbyData = null;
         IsEditing = false;
     }
 
@@ -204,19 +186,11 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
             case nameof(Hobby.Description):
                 RaisePropertyChanged(nameof(Description));
                 break;
+
+            case nameof(Hobby.Id):
+                RaisePropertyChanged(nameof(Id));
+                break;
         }
-    }
-
-    private void InitEditValues()
-    {
-        EditName = Name;
-        EditDescription = Description;
-    }
-
-    private void ReplaceValuesWithEditValues()
-    {
-        Name = EditName;
-        Description = EditDescription;
     }
 
     #endregion

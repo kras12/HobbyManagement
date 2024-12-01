@@ -35,7 +35,7 @@ public class Hobby : ObservableObjectBase
         }
     }
 
-    public string Description
+    public required string Description
     {
         get
         {
@@ -49,5 +49,5 @@ public class Hobby : ObservableObjectBase
         }
     }
 
-    public int Id { get; private init; }
+    public int Id { get; set; }
 }

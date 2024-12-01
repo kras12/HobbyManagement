@@ -209,7 +209,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         {
             if (MessageBox.Show("Are you sure you want to delete this hobby?", "Confirm Action", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                _hobbyManager.DeleteHobby(hobby.GetWrappedHobby());
+                _hobbyManager.DeleteHobby(hobby.Id);
                 ShowNotification("Deleted hobby.");
             }
         }
@@ -224,23 +224,24 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     {
         if (CanSaveHobby(hobby))
         {
+            if (_hobbyManager.HobbyExists(hobby.EditHobbyData!.EditName))
+            {
+                // TODO - Add an error notication type
+                ShowNotification("A hobby with that name already exists");
+                return;
+            }
+
+            var updatedHobby = hobby.SaveEdit();
+
             if (hobby.IsEmpty())
             {
-                if (_hobbyManager.HobbyExists(hobby.EditName))
-                {
-                    // TODO - Add an error notication type
-                    ShowNotification("A hobby with that name already exists");
-                    return;
-                }
-
-                hobby.SaveEdit();
                 _hobbiesCollection.Remove(hobby);
-                _hobbyManager.AddHobby(hobby.GetWrappedHobby());
-                ShowNotification("Created hobby.");
+                _hobbyManager.AddHobby(updatedHobby);
+                ShowNotification("Hobby created.");
             }
             else
             {
-                hobby.SaveEdit();
+                _hobbyManager.UpdateHobby(updatedHobby);
                 ShowNotification("Hobby updated.");
             }
         }
@@ -369,7 +370,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     {
         foreach (Hobby hobby in hobbies)
         {
-            var hobbyToRemove = _hobbiesCollection.FirstOrDefault(x => x.GetWrappedHobby() == hobby);
+            var hobbyToRemove = _hobbiesCollection.FirstOrDefault(x => x.Id == hobby.Id);
 
             if (hobbyToRemove != null)
             {

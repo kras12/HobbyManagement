@@ -41,6 +41,7 @@ public partial class App : Application
 
         serviceCollection.AddSingleton<IHobbyManagerViewModel, HobbyManagerViewModel>();
         serviceCollection.AddTransient<IHobbyViewModel, HobbyViewModel>();
+        serviceCollection.AddTransient<IEditHobbyViewModel, EditHobbyViewModel>();
         serviceCollection.AddSingleton<IHobbyViewModelFactory, HobbyViewModelFactory>();
         serviceCollection.AddTransient<MainWindow>();
     }
