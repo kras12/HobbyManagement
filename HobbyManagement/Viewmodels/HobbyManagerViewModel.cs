@@ -18,16 +18,16 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 {
     #region Fields
 
-    private readonly IMapper _mapper;
     private readonly ObservableCollection<IHobbyViewModel> _hobbiesCollection;
     private readonly HobbyManager _hobbyManager = new HobbyManager();
+    private readonly IHobbyViewModelFactory _hobbyViewModelFactory;
+    private readonly IMapper _mapper;
     private string _gridViewSortedByColumn = "";
     private bool _gridViewSortOrderIsAscending = true;
     private ICollectionView _hobbies = default!;
     private bool _isLoadingData;
-    private string _searchText = "";
     private ObservableCollection<NotificationMessage> _notifications = new();
-    private readonly IHobbyViewModelFactory _hobbyViewModelFactory;
+    private string _searchText = "";
 
     #endregion
 
@@ -43,14 +43,17 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         Hobbies.Filter = FilterHobbies;
         ((ListCollectionView)Hobbies).CustomSort = Comparer<IHobbyViewModel>.Create(CompareHobbySortOrder);
         _hobbyManager.HobbiesChanged += HobbiesChangedEventHandler;
-        SortGridViewByColumnCommand = new GenericRelayCommand<string>(SortHobbyList);
+
         AddHobbyCommand = new RelayCommand(AddEmptyHobby);
+        CancelEditHobbyCommand = new GenericRelayCommand<HobbyViewModel>(CancelEditHobby, CanCancelEditHobby);
         DeleteHobbyCommand = new GenericRelayCommand<IHobbyViewModel>(DeleteHobby, CanDeleteHobby);
         RemoveNotificationCommand = new GenericRelayCommand<NotificationMessage>(RemoveNotification);
+        SaveHobbyCommand = new GenericRelayCommand<HobbyViewModel>(SaveHobby, CanSaveHobby);
+        SortGridViewByColumnCommand = new GenericRelayCommand<string>(SortHobbyList);
+        StartEditHobbyCommand = new GenericRelayCommand<HobbyViewModel>(StartEditHobby, CanStartEditHobby);
 
         SetDefaultHobbyListSorting();
         LoadDataAsync();
-        
     }
 
     #endregion
@@ -71,6 +74,20 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         }
     }
 
+    public ICollectionView Hobbies
+    {
+        get
+        {
+            return _hobbies;
+        }
+
+        private init
+        {
+            _hobbies = value;
+            RaisePropertyChanged(nameof(Hobbies));
+        }
+    }
+
     public bool IsGridViewSortOrderAscending
     {
         get
@@ -84,18 +101,17 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
             RaisePropertyChanged(nameof(IsGridViewSortOrderAscending));
         }
     }
-
-    public ICollectionView Hobbies
+    public bool IsLoadingData
     {
         get
         {
-            return _hobbies;
+            return _isLoadingData;
         }
 
-        private init
+        private set
         {
-            _hobbies = value;
-            RaisePropertyChanged(nameof(Hobbies));
+            _isLoadingData = value;
+            RaisePropertyChanged(nameof(IsLoadingData));
         }
     }
 
@@ -112,21 +128,6 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
             RaisePropertyChanged(nameof(Notifications));
         }
     }
-
-    public bool IsLoadingData
-    {
-        get
-        {
-            return _isLoadingData;
-        }
-
-        private set
-        {
-            _isLoadingData = value;
-            RaisePropertyChanged(nameof(IsLoadingData));
-        }
-    }
-
     public string SearchText
     {
         get
@@ -147,31 +148,54 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     #region Commands
 
     public ICommand AddHobbyCommand { get; }
+    public ICommand CancelEditHobbyCommand { get; }
     public ICommand DeleteHobbyCommand { get; }
     public ICommand RemoveNotificationCommand { get; }
+    public ICommand SaveHobbyCommand { get; }
     public ICommand SortGridViewByColumnCommand { get; }
+    public ICommand StartEditHobbyCommand { get; }
 
     #endregion
 
     #region CommandMethods 
+
+    private static bool CanCancelEditHobby(HobbyViewModel hobby)
+    {
+        return true;
+    }
+
+    private static bool CanSaveHobby(HobbyViewModel hobby)
+    {
+        return hobby.CanSave();
+    }
+
+    private static bool CanStartEditHobby(HobbyViewModel hobby)
+    {
+        return !hobby.IsEditing;
+    }
+
+    private static void StartEditHobby(HobbyViewModel hobby)
+    {
+        if (!hobby.IsEditing)
+        {
+            hobby.StartEdit();
+        }
+    }
 
     private void AddEmptyHobby()
     {
         var newHobby = _hobbyViewModelFactory.CreateHobbyViewModel();
         newHobby.StartEdit();
         _hobbiesCollection.Add(newHobby);
+    }
 
-        newHobby.OnCancelEditHobby += (sender, hobby) =>
+    private void CancelEditHobby(HobbyViewModel hobby)
+    {
+        if (hobby.IsEditing)
         {
-            _hobbies.Remove(newHobby);
-        };
-
-        newHobby.OnSaveEditHobby += (sender, hobby) =>
-        {
-            _hobbies.Remove(newHobby);
-            _hobbyManager.AddHobby(newHobby.GetWrappedHobby());
-            ShowNotification("Created hobby.");
-        };
+            hobby.CancelEdit();
+            _hobbiesCollection.Remove(hobby);
+        }
     }
 
     private bool CanDeleteHobby(IHobbyViewModel hobby)
@@ -196,6 +220,32 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         _notifications.Remove(notification);
     }
 
+    private void SaveHobby(HobbyViewModel hobby)
+    {
+        if (CanSaveHobby(hobby))
+        {
+            if (hobby.IsEmpty())
+            {
+                if (_hobbyManager.HobbyExists(hobby.EditName))
+                {
+                    // TODO - Add an error notication type
+                    ShowNotification("A hobby with that name already exists");
+                    return;
+                }
+
+                hobby.SaveEdit();
+                _hobbiesCollection.Remove(hobby);
+                _hobbyManager.AddHobby(hobby.GetWrappedHobby());
+                ShowNotification("Created hobby.");
+            }
+            else
+            {
+                hobby.SaveEdit();
+                ShowNotification("Hobby updated.");
+            }
+        }
+    }
+
     private void SortHobbyList(string columnName)
     {
         IsGridViewSortOrderAscending = !IsGridViewSortOrderAscending;
@@ -210,34 +260,14 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     private void AddHobbies(List<Hobby> hobbies)
     {
         foreach (Hobby hobby in hobbies)
-        {
-            var newHobbyViewModel = _mapper.Map<IHobbyViewModel>(hobby);
-            newHobbyViewModel.OnSaveEditHobby += (_, _) =>
-            {
-                ShowNotification("Hobby updated.");
-            };
-
-            _hobbiesCollection.Add(newHobbyViewModel);
+        {            
+            _hobbiesCollection.Add(_mapper.Map<IHobbyViewModel>(hobby));
         }
     }
 
     private void ClearHobbies()
     {
         _hobbiesCollection.Clear();
-    }
-
-    private void ShowNotification(string message)
-    {
-        var notification = new NotificationMessage(message);
-        _notifications.Insert(0, notification);
-
-        var timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(2) };
-        timer.Tick += (sender, e) =>
-        {
-            _notifications.Remove(notification);
-            timer.Stop();
-        };
-        timer.Start();
     }
 
     private int CompareHobbySortOrder(IHobbyViewModel hobbyA, IHobbyViewModel hobbyB)
@@ -353,6 +383,20 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         GridViewSortedByColumn = nameof(IHobbyViewModel.Name);
         IsGridViewSortOrderAscending = true;
         Hobbies.Refresh();
+    }
+
+    private void ShowNotification(string message)
+    {
+        var notification = new NotificationMessage(message);
+        _notifications.Insert(0, notification);
+
+        var timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(2) };
+        timer.Tick += (sender, e) =>
+        {
+            _notifications.Remove(notification);
+            timer.Stop();
+        };
+        timer.Start();
     }
 
     #endregion

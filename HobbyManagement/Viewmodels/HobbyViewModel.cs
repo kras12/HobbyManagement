@@ -1,9 +1,7 @@
-﻿using HobbyManagement.Commands;
-using HobbyManagment.Data;
+﻿using HobbyManagment.Data;
 using HobbyManagment.Shared;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Windows.Input;
 
 namespace HobbyManagement.Viewmodels;
 
@@ -22,18 +20,8 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
 
     public HobbyViewModel()
     {
-        SetWrappedHobby(new Hobby() { Name = "New Hobby"});
-        SaveHobbyCommand = new GenericRelayCommand<HobbyViewModel>(SaveEdit, CanSave);
-        StartEditHobbyCommand = new GenericRelayCommand<HobbyViewModel>(StartEdit, CanStartEdit);
-        CancelEditHobbyCommand = new GenericRelayCommand<HobbyViewModel>(CancelEdit, CanCancelEdit);
+        SetWrappedHobby(new Hobby() { Name = ""});
     }
-
-    #endregion
-
-    #region Events
-
-    public event EventHandler<HobbyViewModel> OnCancelEditHobby;
-    public event EventHandler<HobbyViewModel> OnSaveEditHobby;
 
     #endregion
 
@@ -109,9 +97,6 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         }
     }
 
-    private bool CanCancelEditing => IsEditing;
-    private bool CanStartEditing => !IsEditing;
-
     private Hobby WrappedHobby
     {
         get
@@ -138,64 +123,20 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
 
     #endregion
 
-    #region Commands
+    #region Methods
 
-    public ICommand CancelEditHobbyCommand { get; }
-    public ICommand SaveHobbyCommand { get; }
-    public ICommand StartEditHobbyCommand { get; }
-
-    #endregion
-
-    #region CommandMethods
-
-    private static bool CanCancelEdit(HobbyViewModel hobby)
+    public void CancelEdit()
     {
-        return hobby.CanCancelEditing;
+        EndEdit();
     }
 
-    private static void CancelEdit(HobbyViewModel hobby)
-    {
-        if (CanCancelEdit(hobby))
-        {
-            hobby.EndEditMode();
-            hobby.OnCancelEditHobby?.Invoke(hobby, hobby);
-        }
-    }
-
-    private static bool CanSave(HobbyViewModel hobby)
+    public bool CanSave()
     {
         // TODO - Implement better validation and messaging methods. 
-        return hobby.IsEditing
-            && !string.IsNullOrEmpty(hobby.EditName)
-            && !string.IsNullOrEmpty(hobby.EditDescription);
+        return IsEditing
+            && !string.IsNullOrEmpty(EditName)
+            && !string.IsNullOrEmpty(EditDescription);
     }
-
-    private static bool CanStartEdit(HobbyViewModel hobby)
-    {
-        return hobby.CanStartEditing;
-    }
-
-    private static void SaveEdit(HobbyViewModel hobby)
-    {
-        if (CanSave(hobby))
-        {
-            hobby.ReplaceValuesWithEditValues();
-            hobby.EndEditMode();
-            hobby.OnSaveEditHobby?.Invoke(hobby, hobby);
-        }
-    }
-
-    private static void StartEdit(HobbyViewModel hobby)
-    {
-        if (hobby.CanStartEditing)
-        {
-            hobby.StartEdit();
-        }
-    }
-
-    #endregion
-
-    #region Methods
 
     public Hobby GetWrappedHobby()
     {
@@ -228,6 +169,12 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         return true;
     }
 
+    public void SaveEdit()
+    {
+        ReplaceValuesWithEditValues();
+        EndEdit();
+    }
+
     public void SetWrappedHobby(Hobby hobby)
     {
         WrappedHobby = hobby ?? throw new ArgumentNullException(nameof(hobby));
@@ -239,7 +186,7 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         IsEditing = true;
     }
 
-    private void EndEditMode()
+    private void EndEdit()
     {
         EditName = "";
         EditDescription = "";
