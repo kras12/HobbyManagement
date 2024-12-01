@@ -23,7 +23,7 @@ public class HobbyManager : ObservableObjectBase
 
     public void AddHobby(Hobby hobby)
     {
-        if (_hobbies.Any(x => x.Name == hobby.Name))
+        if (HobbyExists(hobby.Name))
         {
             throw new InvalidOperationException("A hobby with that name already exists");
         }
@@ -39,6 +39,11 @@ public class HobbyManager : ObservableObjectBase
     public void ClearHobbies()
     {
         _hobbies.Clear();
+    }
+
+    public bool HobbyExists(string name)
+    {
+        return _hobbies.Any(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
     }
 
     public Task LoadData()
