@@ -6,21 +6,18 @@
         xmlns:local="clr-namespace:HobbyManagement"
         xmlns:viewmodels="clr-namespace:HobbyManagement.Viewmodels"
         xmlns:controls="clr-namespace:HobbyManagement.Controls"
+        xmlns:hobbylistcontrols="clr-namespace:HobbyManagement.Controls.HobbyList"
         mc:Ignorable="d"
-        Title="Hobby Manager" Height="450" Width="800" MinWidth="700" MinHeight="100" >
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/ComponentStyles/HobbyListStyles.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
+        Title="Hobby Manager" Height="450" Width="800" MinWidth="700" MinHeight="100">
     <Border Padding="5">
         <Grid>
             <DockPanel LastChildFill="True">
                 <controls:SearchBox DockPanel.Dock="Top" SearchText="{Binding SearchText, Mode=TwoWay}" Width="200" HorizontalAlignment="Left"/>
-                <controls:NotificationControl DockPanel.Dock="Bottom" Notifications="{Binding Notifications}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                <ListView DockPanel.Dock="Top" x:Name="HobbyList" ItemsSource="{Binding HobbiesView}" Margin="0,10,0,0" Style="{StaticResource HobbyListGridView}"/>
+                <hobbylistcontrols:HobbyListControl Hobbies="{Binding HobbiesView}" Notifications="{Binding Notifications}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    GridViewSortedByColumn="{Binding GridViewSortedByColumn}" IsGridViewSortOrderAscending="{Binding GridViewSortOrderIsAscending}"
+                    AddHobbyCommand="{Binding AddHobbyCommand}" CancelEditHobbyCommand="{Binding CancelEditHobbyCommand}" DeleteHobbyCommand="{Binding DeleteHobbyCommand}" 
+                    RemoveNotificationCommand="{Binding RemoveNotificationCommand}" SaveHobbyCommand="{Binding SaveHobbyCommand}" 
+                    SortGridViewByColumnCommand="{Binding SortGridViewByColumnCommand}" StartEditHobbyCommand="{Binding StartEditHobbyCommand}"/>
             </DockPanel>
         </Grid>
     </Border>
