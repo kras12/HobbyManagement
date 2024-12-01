@@ -71,7 +71,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         }
     }
 
-    public bool GridViewSortOrderIsAscending
+    public bool IsGridViewSortOrderAscending
     {
         get
         {
@@ -81,7 +81,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         private set
         {
             _gridViewSortOrderIsAscending = value;
-            RaisePropertyChanged(nameof(GridViewSortOrderIsAscending));
+            RaisePropertyChanged(nameof(IsGridViewSortOrderAscending));
         }
     }
 
@@ -198,7 +198,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 
     private void SortHobbyList(string columnName)
     {
-        GridViewSortOrderIsAscending = !GridViewSortOrderIsAscending;
+        IsGridViewSortOrderAscending = !IsGridViewSortOrderAscending;
         GridViewSortedByColumn = columnName;
         Hobbies.Refresh();
     }
@@ -266,7 +266,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 
         if (result != 0)
         {
-            return GridViewSortOrderIsAscending ? result : -result;
+            return IsGridViewSortOrderAscending ? result : -result;
         }
 
         return 0;
@@ -351,7 +351,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     private void SetDefaultHobbyListSorting()
     {
         GridViewSortedByColumn = nameof(IHobbyViewModel.Name);
-        GridViewSortOrderIsAscending = true;
+        IsGridViewSortOrderAscending = true;
         Hobbies.Refresh();
     }
 
