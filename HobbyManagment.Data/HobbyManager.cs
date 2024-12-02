@@ -53,9 +53,19 @@ public class HobbyManager : ObservableObjectBase
         _hobbies.Remove(targetHobby);
     }
 
-    public bool HobbyExists(string name)
+    public bool HobbyExists(string name, int? excludeHobbyId = null)
     {
-        return _hobbies.Any(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        var query = _hobbies
+            .Where(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+            .AsQueryable();
+
+        if (excludeHobbyId != null)
+        {
+            query = query
+                .Where(x => x.Id != excludeHobbyId.Value);
+        }
+
+        return query.Any(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
     }
 
     public Task LoadData()

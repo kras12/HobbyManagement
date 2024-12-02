@@ -224,7 +224,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     {
         if (CanSaveHobby(hobby))
         {
-            if (_hobbyManager.HobbyExists(hobby.EditHobbyData!.EditName))
+            if (_hobbyManager.HobbyExists(hobby.EditHobbyData!.EditName, excludeHobbyId: hobby.Id))
             {
                 // TODO - Add an error notication type
                 ShowNotification("A hobby with that name already exists");
