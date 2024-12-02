@@ -261,8 +261,22 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     private void AddHobbies(List<Hobby> hobbies)
     {
         foreach (Hobby hobby in hobbies)
-        {            
-            _hobbiesCollection.Add(_mapper.Map<IHobbyViewModel>(hobby));
+        {
+            var newHobby = _mapper.Map<IHobbyViewModel>(hobby);
+            _hobbiesCollection.Add(newHobby);
+
+            if (!IsLoadingData)
+            {
+                // We must let the UI render the row completely first to avoid an error.
+                Task.Run(async () =>
+                 {
+                     await Task.Delay(100);
+                     Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        newHobby.SetAsUpdated();
+                    });
+                });                
+            }
         }
     }
 

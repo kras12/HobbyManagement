@@ -119,10 +119,30 @@
     <!--===================================================================
     Styles
     ====================================================================-->
+
+    <!-- ListViewItem -->
+    <Style x:Key="HobbyListGridContainerStyle" TargetType="ListViewItem">
+        <Style.Triggers>                
+            <DataTrigger Binding="{Binding IsUpdated}" Value="true">
+                <Setter Property="Background" Value="{StaticResource HighlightChangeBackgroundColor}"/>
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation
+                                Storyboard.TargetProperty="(ListViewItem.Background).(SolidColorBrush.Color)"
+                                To="Transparent"
+                                Duration="0:0:2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
     
     <!-- Hobby list -->
     <Style x:Key="HobbyListGridView" TargetType="ListView">
         <Setter Property="Template" Value="{StaticResource HobbyListGridViewTemplate}"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource HobbyListGridContainerStyle}"/>
         <Setter Property="View">
             <Setter.Value>
                 <GridView>
@@ -131,6 +151,6 @@
                     <GridViewColumn Header="Actions" Width="Auto" CellTemplate="{StaticResource HobbyActionsDisplayTemplate}"/>
                 </GridView>
             </Setter.Value>
-        </Setter>        
+        </Setter>
     </Style>
 </ResourceDictionary>

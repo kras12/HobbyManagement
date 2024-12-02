@@ -3,6 +3,7 @@ using HobbyManagment.Data;
 using HobbyManagment.Shared;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Windows.Threading;
 
 namespace HobbyManagement.Viewmodels;
 
@@ -12,6 +13,7 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
 
     private readonly IMapper _mapper;
     private bool _isEditing;
+    private bool _isUpdated;
     private Hobby _wrappedHobby = default!;
     private IEditHobbyViewModel? editHobbyData;
 
@@ -65,6 +67,20 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         {
             _isEditing = value;
             RaisePropertyChanged(nameof(IsEditing));
+        }
+    }
+
+    public bool IsUpdated
+    {
+        get
+        { 
+            return _isUpdated;
+        }
+
+        private set
+        {
+            _isUpdated = value;
+            RaisePropertyChanged(nameof(IsUpdated));
         }
     }
 
@@ -154,8 +170,21 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
 
         var result = _mapper.Map<IEditHobbyViewModel, Hobby>(EditHobbyData);
         EndEdit();
+        SetAsUpdated();
 
         return result;
+    }
+
+    public void SetAsUpdated()
+    {
+        IsUpdated = true;
+        var timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(2) };
+        timer.Tick += (sender, e) =>
+        {
+            IsUpdated = false;
+            timer.Stop();
+        };
+        timer.Start();
     }
 
     public void SetWrappedHobby(Hobby hobby)

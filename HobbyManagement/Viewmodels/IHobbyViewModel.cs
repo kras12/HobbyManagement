@@ -10,6 +10,7 @@ public interface IHobbyViewModel
     bool IsEditing { get; set; }
     string Name { get; }
     bool IsEmpty();
+    public void SetAsUpdated();
     void SetWrappedHobby(Hobby hobby);
     void StartEdit();
 }

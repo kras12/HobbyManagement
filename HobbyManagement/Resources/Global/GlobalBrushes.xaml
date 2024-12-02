@@ -4,6 +4,8 @@
     <SolidColorBrush x:Key="DefaultBackgroundBrush" Color="#FFF7FCFF"/>
     <SolidColorBrush x:Key="DefaultElementBackgroundBrush" Color="#FFD8E9F3"/>
 
+    <SolidColorBrush x:Key="HighlightChangeBackgroundColor" Color="#FF8BF1D3"/>
+
     <SolidColorBrush x:Key="ButtonBackground" Color="#FF8BC9F1"/>
     <SolidColorBrush x:Key="ButtonDangerBackground" Color="#FFEF6D6D"/>
     <SolidColorBrush x:Key="ButtonDangerForeground" Color="White"/>
@@ -14,5 +16,5 @@
     <SolidColorBrush x:Key="ButtonMouseOverBorder" Color="#FF6DB2DE"/>    
 
     <SolidColorBrush x:Key="TextBoxBackground" Color="#FFEEF6FB"/>
-    <SolidColorBrush x:Key="MessageBackground" Color="#FFA8C3D4"/>
+    <SolidColorBrush x:Key="MessageBackground" Color="#FFA8C3D4"/>    
 </ResourceDictionary>
