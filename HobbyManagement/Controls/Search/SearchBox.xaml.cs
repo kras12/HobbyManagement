@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace HobbyManagement.Controls
+namespace HobbyManagement.Controls.Search
 {
     /// <summary>
     /// Interaction logic for SearchBox.xaml
