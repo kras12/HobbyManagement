@@ -1,4 +1,5 @@
-﻿using HobbyManagement.Viewmodels;
+﻿using HobbyManagement.Controls.Notification.ViewModels;
+using HobbyManagement.Viewmodels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
@@ -7,9 +8,10 @@ namespace HobbyManagement.Controls.HobbyList.ViewModels;
 
 public class DesignHobbyManagerViewModel
 {
-    private readonly ObservableCollection<DesignHobbyViewModel> _hobbiesCollection;
-
     private readonly ICollectionView _hobbies;
+    private readonly ObservableCollection<DesignHobbyViewModel> _hobbiesCollection;
+    private readonly DesignNotificationCollectionViewModel _notificationsContext = new();
+    private ObservableCollection<NotificationMessage> _notifications = new();
 
     public DesignHobbyManagerViewModel()
     {
@@ -22,9 +24,9 @@ public class DesignHobbyManagerViewModel
         _hobbies = CollectionViewSource.GetDefaultView(_hobbiesCollection);
     }
 
-    public ICollectionView Hobbies => _hobbies;
-
     public string GridViewSortedByColumn => nameof(IHobbyViewModel.Name);
-
+    public ICollectionView Hobbies => _hobbies;
     public bool IsGridViewSortOrderAscending => true;
+    public ObservableCollection<NotificationMessage> Notifications => _notifications;
+    public DesignNotificationCollectionViewModel NotificationsContext => _notificationsContext;
 }
