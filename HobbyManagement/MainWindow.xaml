@@ -5,10 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HobbyManagement"
         xmlns:viewmodels="clr-namespace:HobbyManagement.Viewmodels"
+        xmlns:hobbylistdesignviewmodels="clr-namespace:HobbyManagement.Controls.HobbyList.ViewModels"
         xmlns:searchcontrols="clr-namespace:HobbyManagement.Controls.Search"
         xmlns:hobbylistcontrols="clr-namespace:HobbyManagement.Controls.HobbyList"
         mc:Ignorable="d"
-        Title="Hobby Manager" Height="450" Width="800" MinWidth="700" MinHeight="100">
+        Title="Hobby Manager" Height="450" Width="800" MinWidth="700" MinHeight="100"
+        d:DataContext="{d:DesignInstance Type=hobbylistdesignviewmodels:DesignHobbyManagerViewModel, IsDesignTimeCreatable=True}">
     <Border Padding="10">
         <Grid>
             <DockPanel LastChildFill="True">
