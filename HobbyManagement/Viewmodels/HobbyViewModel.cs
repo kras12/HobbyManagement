@@ -135,6 +135,16 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
             && !string.IsNullOrEmpty(EditHobbyData.EditDescription);
     }
 
+    public string HobbyAsCSV()
+    {
+        return @$"""{Name}"", ""{Description}""";
+    }
+
+    public string HobbyHeaderAsCSV()
+    {
+        return @$"""{nameof(Name)}"", ""{nameof(Description)}""";
+    }
+
     public bool IsEmpty()
     {
         foreach (PropertyInfo property in typeof(HobbyViewModel).GetProperties())

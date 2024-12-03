@@ -3,10 +3,12 @@ using HobbyManagement.Commands;
 using HobbyManagement.Services;
 using HobbyManagment.Data;
 using HobbyManagment.Shared;
+using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -47,6 +49,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         AddHobbyCommand = new RelayCommand(AddEmptyHobby);
         CancelEditHobbyCommand = new GenericRelayCommand<HobbyViewModel>(CancelEditHobby, CanCancelEditHobby);
         DeleteHobbyCommand = new GenericRelayCommand<IHobbyViewModel>(DeleteHobby, CanDeleteHobby);
+        ExportHobbiesCommand = new RelayCommand(ExportHobbies, CanExportHobbies);
         RemoveNotificationCommand = new GenericRelayCommand<NotificationMessage>(RemoveNotification);
         SaveHobbyCommand = new GenericRelayCommand<HobbyViewModel>(SaveHobby, CanSaveHobby);
         SortGridViewByColumnCommand = new GenericRelayCommand<string>(SortHobbyList);
@@ -150,6 +153,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     public ICommand AddHobbyCommand { get; }
     public ICommand CancelEditHobbyCommand { get; }
     public ICommand DeleteHobbyCommand { get; }
+    public ICommand ExportHobbiesCommand { get; }
     public ICommand RemoveNotificationCommand { get; }
     public ICommand SaveHobbyCommand { get; }
     public ICommand SortGridViewByColumnCommand { get; }
@@ -203,6 +207,10 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         return hobby != null;
     }
 
+    private bool CanExportHobbies()
+    {
+        return _hobbiesCollection.Count > 0;
+    }
     private void DeleteHobby(IHobbyViewModel hobby)
     {
         if (CanDeleteHobby(hobby))
@@ -215,6 +223,22 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         }
     }
 
+    private void ExportHobbies()
+    {
+        if (CanExportHobbies())
+        {
+            SaveFileDialog saveFileDialog = new();
+            saveFileDialog.Filter = "CSV files (*.csv)|*.csv";
+            saveFileDialog.Title = "Export File";
+            saveFileDialog.OverwritePrompt = true;
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                ExportHobbiesAsCsv(_hobbiesCollection, saveFileDialog.FileName);
+                ShowNotification("Exported hobbies successfully.");
+            }
+        }
+    }
     private void RemoveNotification(NotificationMessage notification)
     {
         _notifications.Remove(notification);
@@ -315,6 +339,23 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         }
 
         return 0;
+    }
+
+    private void ExportHobbiesAsCsv(IList<IHobbyViewModel> hobbies, string filePath)
+    {
+        if (hobbies.Count == 0)
+        {
+            throw new ArgumentException("The hobbies collection can't be empty", nameof(hobbies));
+        }
+
+        List<string> rows = [hobbies[0].HobbyHeaderAsCSV()];
+
+        foreach (var hobby in hobbies)
+        {
+            rows.Add(hobby.HobbyAsCSV());
+        }
+
+        File.WriteAllLines(filePath, rows);
     }
 
     private bool FilterHobbies(object item)

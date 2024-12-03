@@ -14,7 +14,11 @@
     <Border Padding="10">
         <Grid>
             <DockPanel LastChildFill="True">
-                <searchcontrols:SearchBox DockPanel.Dock="Top" SearchText="{Binding SearchText, Mode=TwoWay}" Width="200" HorizontalAlignment="Left"/>
+                <DockPanel DockPanel.Dock="Top">
+                    <searchcontrols:SearchBox DockPanel.Dock="Left" SearchText="{Binding SearchText, Mode=TwoWay}" Width="200" HorizontalAlignment="Left"/>
+                    <Button DockPanel.Dock="Right" Content="Export" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding ExportHobbiesCommand}"/>
+                </DockPanel>
+                
                 <hobbylistcontrols:HobbyListControl Hobbies="{Binding Hobbies}" Notifications="{Binding Notifications}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     GridViewSortedByColumn="{Binding GridViewSortedByColumn}" IsGridViewSortOrderAscending="{Binding IsGridViewSortOrderAscending}"
                     AddHobbyCommand="{Binding AddHobbyCommand}" CancelEditHobbyCommand="{Binding CancelEditHobbyCommand}" DeleteHobbyCommand="{Binding DeleteHobbyCommand}" 
