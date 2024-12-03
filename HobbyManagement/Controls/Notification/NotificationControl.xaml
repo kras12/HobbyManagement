@@ -1,21 +1,23 @@
-﻿    <UserControl x:Class="HobbyManagement.Controls.NotificationControl"
+﻿<UserControl x:Class="HobbyManagement.Controls.Notification.NotificationControl"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-        xmlns:local="clr-namespace:HobbyManagement.Controls"
+        xmlns:local="clr-namespace:HobbyManagement.Controls.Notification"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:viewmodels="clr-namespace:HobbyManagement.Controls.Notification.ViewModels"
         mc:Ignorable="d" 
-        d:DesignHeight="450" d:DesignWidth="800">
-        <UserControl.Resources>
-            <Storyboard x:Key="ShowNotificationStoryBoard">
-                <DoubleAnimation        
+        d:DesignHeight="150" d:DesignWidth="300"
+        d:DataContext="{d:DesignInstance Type=viewmodels:DesignNotificationCollectionViewModel, IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <Storyboard x:Key="ShowNotificationStoryBoard">
+            <DoubleAnimation        
                     Storyboard.TargetProperty="Opacity"
                     From="0"
                     To="1"
                     Duration="0:0:1"/>
-            </Storyboard>
-        </UserControl.Resources>
+        </Storyboard>
+    </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,10,0,10" Visibility="{Binding Notifications.Count, Converter={StaticResource CollectionCountToVisbilityConverter}}">
         <ItemsControl ItemsSource="{Binding Notifications}" d:Width="200" d:Height="300" d:Background="LightSteelBlue">

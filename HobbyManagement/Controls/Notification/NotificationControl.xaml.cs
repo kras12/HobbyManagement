@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace HobbyManagement.Controls;
+namespace HobbyManagement.Controls.Notification;
 
 /// <summary>
 /// Interaction logic for NotificationControl.xaml

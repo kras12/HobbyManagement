@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:HobbyManagement.Controls.HobbyList"
-             xmlns:controls="clr-namespace:HobbyManagement.Controls" 
+             xmlns:notificationcontrols="clr-namespace:HobbyManagement.Controls.Notification" 
              xmlns:viewmodels="clr-namespace:HobbyManagement.Controls.HobbyList.ViewModels" 
              d:DataContext="{d:DesignInstance Type=viewmodels:DesignHobbyManagerViewModel, IsDesignTimeCreatable=True}"
              mc:Ignorable="d" 
@@ -18,7 +18,7 @@
     </UserControl.Resources>
     <Grid>
         <DockPanel LastChildFill="True">
-            <controls:NotificationControl DockPanel.Dock="Bottom" Notifications="{Binding Notifications, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <notificationcontrols:NotificationControl DockPanel.Dock="Bottom" Notifications="{Binding Notifications, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             <ListView DockPanel.Dock="Top" x:Name="HobbyList" ItemsSource="{Binding Hobbies, Mode=OneWay}" Margin="0,10,0,0" Style="{StaticResource HobbyListGridView}"/>
         </DockPanel>
     </Grid>
