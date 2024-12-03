@@ -9,7 +9,7 @@
         xmlns:hobbylistcontrols="clr-namespace:HobbyManagement.Controls.HobbyList"
         mc:Ignorable="d"
         Title="Hobby Manager" Height="450" Width="800" MinWidth="700" MinHeight="100">
-    <Border Padding="5">
+    <Border Padding="10">
         <Grid>
             <DockPanel LastChildFill="True">
                 <searchcontrols:SearchBox DockPanel.Dock="Top" SearchText="{Binding SearchText, Mode=TwoWay}" Width="200" HorizontalAlignment="Left"/>
