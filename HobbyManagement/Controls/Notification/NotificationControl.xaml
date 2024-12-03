@@ -20,7 +20,7 @@
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,10,0,10" Visibility="{Binding Notifications.Count, Converter={StaticResource CollectionCountToVisbilityConverter}}">
-        <ItemsControl ItemsSource="{Binding Notifications}" d:Width="200" d:Height="300" d:Background="LightSteelBlue">
+        <ItemsControl ItemsSource="{Binding Notifications}" d:Height="300">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border x:Name="NotificationBorder" Background="{StaticResource MessageBackground}" BorderBrush="Black" BorderThickness="1" Opacity="0" CornerRadius="10"
