@@ -17,6 +17,7 @@ public class HobbiesRepository : IHobbiesRepository
     {
         _context.Add(hobby);
         await _context.SaveChangesAsync();
+        _context.Entry(hobby).State = EntityState.Detached;
         return hobby;
     }
 
