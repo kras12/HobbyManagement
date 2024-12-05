@@ -37,6 +37,11 @@ public class HobbiesRepository : IHobbiesRepository
         return await _context.Hobbies.AsNoTracking().FirstOrDefaultAsync(x => x.HobbyId == id);
     }
 
+    public Task<int> HobbiesCount()
+    {
+        return _context.Hobbies.CountAsync();
+    }
+
     public async Task<bool> HobbyExists(string name)
     {
         return await _context.Hobbies.AnyAsync(x => x.Name == name);

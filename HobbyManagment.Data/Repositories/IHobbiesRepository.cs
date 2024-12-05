@@ -7,6 +7,7 @@ public interface IHobbiesRepository
     Task DeleteHobbyAsync(HobbyEntity hobby);
     Task<List<HobbyEntity>> GetAllAsync();
     Task<HobbyEntity?> GetAsync(int id);
+    Task<int> HobbiesCount();
     Task<bool> HobbyExists(string name);
     Task<HobbyEntity> Update(HobbyEntity hobby);
 }
