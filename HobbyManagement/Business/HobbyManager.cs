@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using HobbyManagement.Mapping;
+using HobbyManagment.Data;
 using HobbyManagment.Shared;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
-namespace HobbyManagment.Data;
+namespace HobbyManagement.Business;
 
 public class HobbyManager : ObservableObjectBase
 {
@@ -20,7 +21,7 @@ public class HobbyManager : ObservableObjectBase
     public event NotifyCollectionChangedEventHandler HobbiesChanged
     {
         add { _hobbies.CollectionChanged += value; }
-        remove {  _hobbies.CollectionChanged -= value; }
+        remove { _hobbies.CollectionChanged -= value; }
     }
 
     public ReadOnlyObservableCollection<Hobby> Hobbies { get; }
