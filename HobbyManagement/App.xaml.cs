@@ -1,8 +1,12 @@
-﻿using AutoMapper;
+﻿using AppSettings.Shared.Settings;
+using AutoMapper;
 using HobbyManagement.Mapping;
 using HobbyManagement.Services;
 using HobbyManagement.Services.Csv;
 using HobbyManagement.Viewmodels;
+using HobbyManagment.Data.Database;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 
@@ -46,6 +50,16 @@ public partial class App : Application
         serviceCollection.AddSingleton<IHobbyViewModelFactory, HobbyViewModelFactory>();
         serviceCollection.AddSingleton<ICsvService, CsvService>();
         serviceCollection.AddTransient<MainWindow>();
+
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile(AppSettingsHelper.AppSettingsFileName)
+            .Build();
+
+        serviceCollection.AddDbContext<ApplicationDbContext>(options =>
+        {
+            options.UseSqlServer(configuration.GetConnectionString(AppSettingsHelper.DevDbConnectionStringKey));
+        });
     }
 
     private IServiceProvider CreateServiceProvider()
