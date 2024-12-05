@@ -5,6 +5,7 @@ using HobbyManagement.Services;
 using HobbyManagement.Services.Csv;
 using HobbyManagement.Viewmodels;
 using HobbyManagment.Data.Database;
+using HobbyManagment.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,6 +51,7 @@ public partial class App : Application
         serviceCollection.AddSingleton<IHobbyViewModelFactory, HobbyViewModelFactory>();
         serviceCollection.AddSingleton<ICsvService, CsvService>();
         serviceCollection.AddTransient<MainWindow>();
+        serviceCollection.AddTransient<IHobbiesRepository, HobbiesRepository>();
 
         var configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
