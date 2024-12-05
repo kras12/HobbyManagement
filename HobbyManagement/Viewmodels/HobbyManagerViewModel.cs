@@ -23,7 +23,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 
     private readonly ICsvService _csvService;
     private readonly ObservableCollection<IHobbyViewModel> _hobbiesCollection;
-    private readonly HobbyManager _hobbyManager = new HobbyManager();
+    private readonly IHobbyManager _hobbyManager;
     private readonly IHobbyViewModelFactory _hobbyViewModelFactory;
     private readonly IMapper _mapper;
     private string _gridViewSortedByColumn = "";
@@ -36,11 +36,12 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 
     #region Constructors
 
-    public HobbyManagerViewModel(IHobbyViewModelFactory hobbyViewModelFactory, IMapper mapper, ICsvService csvService)
+    public HobbyManagerViewModel(IHobbyViewModelFactory hobbyViewModelFactory, IMapper mapper, ICsvService csvService, IHobbyManager hobbyManager)
     {
         _hobbyViewModelFactory = hobbyViewModelFactory;
         _mapper = mapper;
         _csvService = csvService;
+        _hobbyManager = hobbyManager;        
 
         _hobbiesCollection = new ObservableCollection<IHobbyViewModel>();
         Hobbies = CollectionViewSource.GetDefaultView(_hobbiesCollection);
@@ -59,7 +60,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         StartEditHobbyCommand = new GenericRelayCommand<HobbyViewModel>(StartEditHobby, CanStartEditHobby);
 
         SetDefaultHobbyListSorting();
-        LoadDataAsync();        
+        _ = LoadDataAsync();
     }
 
     #endregion
@@ -257,7 +258,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         }
     }
 
-    private void ImportHobbies()
+    private async Task ImportHobbies()
     {
         try
         {
@@ -276,7 +277,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 
                     if (!_hobbiesCollection.Any(x => x.Name == name.Value))
                     {
-                        _hobbyManager.AddHobby(new Hobby(name: name!.Value, description: description!.Value));
+                        await _hobbyManager.AddHobby(new Hobby(name: name!.Value, description: description!.Value));
                         importedCount++;
                     }
                 }
@@ -296,7 +297,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         _notifications.Remove(notification);
     }
 
-    private void SaveHobby(HobbyViewModel hobby)
+    private async Task SaveHobby(HobbyViewModel hobby)
     {
         if (CanSaveHobby(hobby))
         {
@@ -312,12 +313,12 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
             if (hobby.IsEmpty())
             {
                 _hobbiesCollection.Remove(hobby);
-                _hobbyManager.AddHobby(updatedHobby);
+                await _hobbyManager.AddHobby(updatedHobby);
                 ShowNotification("Hobby created.");
             }
             else
             {
-                _hobbyManager.UpdateHobby(updatedHobby);
+                await _hobbyManager.UpdateHobby(updatedHobby);
                 ShowNotification("Hobby updated.");
             }
         }
@@ -425,12 +426,12 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         }
     }
 
-    private async void LoadDataAsync()
+    private async Task LoadDataAsync()
     {
         try
         {
             IsLoadingData = true;
-            await _hobbyManager.LoadData();
+            await _hobbyManager.LoadDataAsync();
         }
         catch (Exception ex)
         {
