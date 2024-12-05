@@ -35,15 +35,29 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
             throw new InvalidOperationException("A hobby with that name already exists");
         }
 
-        if (!await _hobbiesRepository.HobbyExists(hobby.Name))
+        try
         {
-            var newHobby = await _hobbiesRepository.CreateHobbyAsync(_mapper.Map<HobbyEntity>(hobby));
-            _hobbies.Add(_mapper.Map<Hobby>(newHobby));
+
+            if (!await _hobbiesRepository.HobbyExists(hobby.Name))
+            {
+                var newHobby = await _hobbiesRepository.CreateHobbyAsync(_mapper.Map<HobbyEntity>(hobby));
+                _hobbies.Add(_mapper.Map<Hobby>(newHobby));
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occured while creating a hobby: {ex.Message}");
+            throw;
         }
     }
 
     public async Task DeleteHobby(int Id)
     {
+        if (Id <= 0)
+        {
+            throw new ArgumentOutOfRangeException($"The hobby ID must be larger than zero.");
+        }
+
         var targetHobby = _hobbies.FirstOrDefault(x => x.Id == Id);
 
         if (targetHobby == null)
@@ -51,10 +65,18 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
             throw new InvalidOperationException("The hobby was not found.");
         }
 
-        if (await _hobbiesRepository.HobbyExists(targetHobby.Name))
+        try
         {
-            await _hobbiesRepository.DeleteHobbyAsync(_mapper.Map<HobbyEntity>(targetHobby));
-            _hobbies.Remove(targetHobby);
+            if (await _hobbiesRepository.HobbyExists(targetHobby.Name))
+            {
+                await _hobbiesRepository.DeleteHobbyAsync(_mapper.Map<HobbyEntity>(targetHobby));
+                _hobbies.Remove(targetHobby);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occured while deleting a hobby: {ex.Message}");
+            throw;
         }
     }
 
@@ -75,47 +97,74 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
 
     public async Task LoadDataAsync()
     {
-        var hobbies = await _hobbiesRepository.GetAllAsync();
-
-        if (hobbies.Count > 0)
+        try
         {
-            foreach (var hobby in hobbies)
+            var hobbies = await _hobbiesRepository.GetAllAsync();
+
+            if (hobbies.Count > 0)
             {
-                _hobbies.Add(_mapper.Map<Hobby>(hobby));
+                foreach (var hobby in hobbies)
+                {
+                    _hobbies.Add(_mapper.Map<Hobby>(hobby));
+                }
+            }
+            else
+            {
+                await SeedDataAsync();
             }
         }
-        else
+        catch (Exception ex)
         {
-            await SeedDataAsync();
+            Console.WriteLine($"An error occured while loading hobbies: {ex.Message}");
+            throw;
         }
+        
     }
 
     public async Task UpdateHobby(Hobby hobby)
     {
-        var targetHobby = _hobbies.FirstOrDefault(x => x.Id == hobby.Id);
-
-        if (targetHobby == null)
+        try
         {
-            throw new InvalidOperationException("The hobby was not found.");
-        }
+            var targetHobby = _hobbies.FirstOrDefault(x => x.Id == hobby.Id);
 
-        var updatedHobby = await _hobbiesRepository.Update(_mapper.Map<HobbyEntity>(targetHobby));
-        _mapper.Map(source: _mapper.Map<Hobby>(updatedHobby), destination: targetHobby);
+            if (targetHobby == null)
+            {
+                throw new InvalidOperationException("The hobby was not found.");
+            }
+
+            var updatedHobby = await _hobbiesRepository.Update(_mapper.Map<HobbyEntity>(targetHobby));
+            _mapper.Map(source: _mapper.Map<Hobby>(updatedHobby), destination: targetHobby);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occured while updating a hobby: {ex.Message}");
+            throw;
+        }
     }
 
     private async Task SeedDataAsync()
     {
-        // Todo - Move to seeding class
-        List<Hobby> seedHobbies = new()
+        try
+        {
+
+
+            // Todo - Move to seeding class
+            List<Hobby> seedHobbies = new()
             {
-                new Hobby(id: 1, name: "Weight Training", description: "Weight training at the gym."),
-                new Hobby(id: 2, name: "Movies and TV-series", description: "Occasionally watching movies and TV-series."),
-                new Hobby(id: 3, name: "Programming", description: "Programming with C# .Net.")
+                new Hobby(name: "Weight Training", description: "Weight training at the gym."),
+                new Hobby(name: "Movies and TV-series", description: "Occasionally watching movies and TV-series."),
+                new Hobby(name: "Programming", description: "Programming with C# .Net.")
             };
 
-        foreach (var seedHobby in seedHobbies)
+            foreach (var seedHobby in seedHobbies)
+            {
+                await AddHobby(_mapper.Map<Hobby>(seedHobby));
+            }
+        }
+        catch (Exception ex)
         {
-            await AddHobby(_mapper.Map<Hobby>(seedHobby));
+            Console.WriteLine($"An error occured while seeding hobbies: {ex.Message}");
+            throw;
         }
     }
 }
