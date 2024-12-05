@@ -1,4 +1,4 @@
-﻿using HobbyManagment.Data.Models;
+﻿using HobbyManagment.Data.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace HobbyManagment.Data.Database;

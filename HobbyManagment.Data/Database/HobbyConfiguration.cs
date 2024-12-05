@@ -1,4 +1,4 @@
-﻿using HobbyManagment.Data.Models;
+﻿using HobbyManagment.Data.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

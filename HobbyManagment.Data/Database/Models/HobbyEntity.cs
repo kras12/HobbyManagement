@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace HobbyManagment.Data.Models;
+namespace HobbyManagment.Data.Database.Models;
 
 public class HobbyEntity
 {

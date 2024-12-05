@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using HobbyManagment.Data;
-using HobbyManagment.Data.Models;
+using HobbyManagment.Data.Database.Models;
 
 namespace HobbyManagement.Mapping;
 
