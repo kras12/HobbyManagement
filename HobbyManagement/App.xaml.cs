@@ -4,6 +4,7 @@ using HobbyManagement.Business;
 using HobbyManagement.Mapping;
 using HobbyManagement.Services;
 using HobbyManagement.Services.Csv;
+using HobbyManagement.Services.Mock;
 using HobbyManagement.Viewmodels;
 using HobbyManagment.Data.Database;
 using HobbyManagment.Data.Repositories;
@@ -21,7 +22,7 @@ public partial class App : Application
 {
     private IServiceProvider _serviceProvider = default!;
 
-    protected override void OnStartup(StartupEventArgs e)
+    protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
         _serviceProvider = CreateServiceProvider();
@@ -29,6 +30,9 @@ public partial class App : Application
 #if DEBUG
         var dbContext = _serviceProvider.GetService<ApplicationDbContext>();
         dbContext.Database.Migrate();
+
+        var mockService = _serviceProvider.GetRequiredService<IMockDataService>();
+        await mockService.TrySeedHobbies();
 #endif
 
         _serviceProvider.GetRequiredService<MainWindow>().Show();
@@ -60,6 +64,7 @@ public partial class App : Application
         serviceCollection.AddTransient<MainWindow>();
         serviceCollection.AddTransient<IHobbiesRepository, HobbiesRepository>();
         serviceCollection.AddTransient<IHobbyManager, HobbyManager>();
+        serviceCollection.AddTransient<IMockDataService , MockDataService>();
 
         var configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)

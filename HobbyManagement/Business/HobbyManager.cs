@@ -114,16 +114,9 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
         {
             var hobbies = await _hobbiesRepository.GetAllAsync();
 
-            if (hobbies.Count > 0)
+            foreach (var hobby in hobbies)
             {
-                foreach (var hobby in hobbies)
-                {
-                    _hobbies.Add(_mapper.Map<Hobby>(hobby));
-                }
-            }
-            else
-            {
-                await SeedDataAsync();
+                _hobbies.Add(_mapper.Map<Hobby>(hobby));
             }
         }
         catch (Exception ex)
@@ -151,32 +144,6 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
         catch (Exception ex)
         {
             Console.WriteLine($"An error occured while updating a hobby: {ex.Message}");
-            throw;
-        }
-    }
-
-    private async Task SeedDataAsync()
-    {
-        try
-        {
-
-
-            // Todo - Move to seeding class
-            List<Hobby> seedHobbies = new()
-            {
-                new Hobby(name: "Weight Training", description: "Weight training at the gym."),
-                new Hobby(name: "Movies and TV-series", description: "Occasionally watching movies and TV-series."),
-                new Hobby(name: "Programming", description: "Programming with C# .Net.")
-            };
-
-            foreach (var seedHobby in seedHobbies)
-            {
-                await CreateHobby(_mapper.Map<Hobby>(seedHobby));
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occured while seeding hobbies: {ex.Message}");
             throw;
         }
     }
