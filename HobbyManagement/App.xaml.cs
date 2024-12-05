@@ -25,6 +25,12 @@ public partial class App : Application
     {
         base.OnStartup(e);
         _serviceProvider = CreateServiceProvider();
+
+#if DEBUG
+        var dbContext = _serviceProvider.GetService<ApplicationDbContext>();
+        dbContext.Database.Migrate();
+#endif
+
         _serviceProvider.GetRequiredService<MainWindow>().Show();
     }
 
