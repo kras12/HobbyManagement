@@ -1,5 +1,6 @@
 ﻿using HobbyManagement.Business;
 using HobbyManagment.Data.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HobbyManagement.Services.Mock;
 
@@ -20,6 +21,8 @@ public class MockDataService : IMockDataService
     /// </summary>
     private readonly IHobbyManager _hobbyManager;
 
+    private readonly IServiceProvider _serviceProvider;
+
     #endregion
 
     #region Constructors
@@ -29,10 +32,11 @@ public class MockDataService : IMockDataService
     /// </summary>
     /// <param name="hobbiesRepository">Injected repository for hobbies.</param>
     /// <param name="hobbyManager"> Injected hobby manager.</param>
-    public MockDataService(IHobbiesRepository hobbiesRepository, IHobbyManager hobbyManager)
+    public MockDataService(IHobbiesRepository hobbiesRepository, IHobbyManager hobbyManager, IServiceProvider serviceProvider)
     {
         _hobbiesRepository = hobbiesRepository;
         _hobbyManager = hobbyManager;
+        _serviceProvider = serviceProvider;
     }
 
     #endregion
@@ -49,16 +53,17 @@ public class MockDataService : IMockDataService
         {
             if (await _hobbiesRepository.HobbiesCount() == 0)
             {
-                List<Hobby> seedHobbies = new()
-            {
-                new Hobby(name: "Weight Training", description: "Weight training at the gym."),
-                new Hobby(name: "Movies and TV-series", description: "Occasionally watching movies and TV-series."),
-                new Hobby(name: "Programming", description: "Programming with C# .Net.")
-            };
+                List<(string hobbyName, string hobbyDescription)> seedHobbies = new()
+                {
+                    ("Weight Training", "Weight training at the gym."),
+                    ("Movies and TV-series",
+                    "Occasionally watching movies and TV-series."),
+                    ("Programming", "Programming with C# .Net.")
+                };
 
                 foreach (var seedHobby in seedHobbies)
                 {
-                    await _hobbyManager.CreateHobby(seedHobby);
+                    await _hobbyManager.CreateHobby(CreateIHobby(seedHobby.hobbyName, seedHobby.hobbyDescription));
                 }
             }
         }
@@ -67,6 +72,20 @@ public class MockDataService : IMockDataService
             Console.WriteLine($"An error occured while seeding hobbies: {ex.Message}");
             throw;
         }
+    }
+
+    /// <summary>
+    /// Creates an <see cref="IHobby"/> by using the service provider.
+    /// </summary>
+    /// <param name="name">The name of the hobby.</param>
+    /// <param name="description">The description of the hobby.</param>
+    /// <returns></returns>
+    private IHobby CreateIHobby(string name, string description)
+    {
+        var hobby = _serviceProvider.GetRequiredService<IHobby>();
+        hobby.Name = name;
+        hobby.Description = description;
+        return hobby;
     }
 
     #endregion

@@ -13,6 +13,6 @@ public interface IHobbyViewModel
     string HobbyHeaderNamesAsCsv();
     bool IsEmpty();
     public void SetAsUpdated();
-    void SetWrappedHobby(Hobby hobby);
+    void SetWrappedHobby(IHobby hobby);
     void StartEdit();
 }

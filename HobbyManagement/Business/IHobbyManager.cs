@@ -9,10 +9,10 @@ namespace HobbyManagement.Business;
 public interface IHobbyManager
 {
     event NotifyCollectionChangedEventHandler HobbiesChanged;
-    ReadOnlyObservableCollection<Hobby> Hobbies { get; }
-    Task CreateHobby(Hobby hobby);
+    ReadOnlyObservableCollection<IHobby> Hobbies { get; }
+    Task CreateHobby(IHobby hobby);
     Task DeleteHobby(int Id);
     bool HobbyExists(string name, int? excludeHobbyId = null);
     Task LoadDataAsync();
-    Task UpdateHobby(Hobby hobby);
+    Task UpdateHobby(IHobby hobby);
 }

@@ -17,7 +17,7 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
     /// <summary>
     /// A collection of hobbies.
     /// </summary>
-    private readonly ObservableCollection<Hobby> _hobbies = [];
+    private readonly ObservableCollection<IHobby> _hobbies = [];
 
     /// <summary>
     /// The injected repository for hobbies.
@@ -40,7 +40,7 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
     /// <param name="mapper">The injected mapper service. </param>
     public HobbyManager(IHobbiesRepository hobbiesRepository, IMapper mapper)
     {
-        Hobbies = new ReadOnlyObservableCollection<Hobby>(_hobbies);
+        Hobbies = new ReadOnlyObservableCollection<IHobby>(_hobbies);
         _hobbiesRepository = hobbiesRepository;
         _mapper = mapper;
     }
@@ -65,7 +65,7 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
     /// <summary>
     /// A readonly and observable collection of hobbies. 
     /// </summary>
-    public ReadOnlyObservableCollection<Hobby> Hobbies { get; }
+    public ReadOnlyObservableCollection<IHobby> Hobbies { get; }
 
     #endregion
 
@@ -77,7 +77,7 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
     /// <param name="hobby">The hobby to add.</param>
     /// <returns><see cref="Task"/></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task CreateHobby(Hobby hobby)
+    public async Task CreateHobby(IHobby hobby)
     {
         if (HobbyExists(hobby.Name))
         {
@@ -90,7 +90,7 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
             if (!await _hobbiesRepository.HobbyExists(hobby.Name))
             {
                 var newHobby = await _hobbiesRepository.CreateHobbyAsync(_mapper.Map<HobbyEntity>(hobby));
-                _hobbies.Add(_mapper.Map<Hobby>(newHobby));
+                _hobbies.Add(_mapper.Map<IHobby>(newHobby));
             }
         }
         catch (Exception ex)
@@ -170,7 +170,7 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
 
             foreach (var hobby in hobbies)
             {
-                _hobbies.Add(_mapper.Map<Hobby>(hobby));
+                _hobbies.Add(_mapper.Map<IHobby>(hobby));
             }
         }
         catch (Exception ex)
@@ -187,7 +187,7 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
     /// <param name="hobby">The hobby to update.</param>
     /// <returns><see cref="Task"/></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task UpdateHobby(Hobby hobby)
+    public async Task UpdateHobby(IHobby hobby)
     {
         try
         {

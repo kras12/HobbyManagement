@@ -15,7 +15,7 @@ class AutoMapperProfile : Profile
     /// </summary>
     public AutoMapperProfile()
     {
-        CreateMap<Hobby, IHobbyViewModel>()
+        CreateMap<IHobby, IHobbyViewModel>()
         .ConstructUsingServiceLocator()
         .AfterMap((src, dest) =>
         {
@@ -28,12 +28,14 @@ class AutoMapperProfile : Profile
             .ForMember(dest => dest.EditName, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
 
-        CreateMap<IEditHobbyViewModel, Hobby>()
+        CreateMap<IEditHobbyViewModel, IHobby>()
+            .ConstructUsingServiceLocator()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.EditName))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.EditDescription))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
 
-        CreateMap<HobbyEntity, Hobby>()
+        CreateMap<HobbyEntity, IHobby>()
+            .ConstructUsingServiceLocator()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.HobbyId))

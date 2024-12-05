@@ -5,6 +5,7 @@ using HobbyManagement.Services;
 using HobbyManagement.Services.Csv;
 using HobbyManagement.Services.Csv.Error;
 using HobbyManagment.Shared;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -31,16 +32,18 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     private bool _isLoadingData;
     private ObservableCollection<NotificationMessage> _notifications = new();
     private string _searchText = "";
+    private readonly IServiceProvider _serviceProvider;
+
     #endregion
 
     #region Constructors
 
-    public HobbyManagerViewModel(IHobbyViewModelFactory hobbyViewModelFactory, IMapper mapper, ICsvService csvService, IHobbyManager hobbyManager)
+    public HobbyManagerViewModel(IHobbyViewModelFactory hobbyViewModelFactory, IMapper mapper, ICsvService csvService, IHobbyManager hobbyManager, IServiceProvider serviceProvider)
     {
         _hobbyViewModelFactory = hobbyViewModelFactory;
         _mapper = mapper;
         _csvService = csvService;
-        _hobbyManager = hobbyManager;        
+        _hobbyManager = hobbyManager;
 
         _hobbiesCollection = new ObservableCollection<IHobbyViewModel>();
         Hobbies = CollectionViewSource.GetDefaultView(_hobbiesCollection);
@@ -60,6 +63,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 
         SetDefaultHobbyListSorting();
         _ = LoadDataAsync();
+        this._serviceProvider = serviceProvider;
     }
 
     #endregion
@@ -276,7 +280,11 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 
                     if (!_hobbiesCollection.Any(x => x.Name == name.Value))
                     {
-                        await _hobbyManager.CreateHobby(new Hobby(name: name!.Value, description: description!.Value));
+                        var newHobby = _serviceProvider.GetRequiredService<IHobby>();
+                        newHobby.Name = name!.Value;
+                        newHobby.Description = description!.Value;
+
+                        await _hobbyManager.CreateHobby(newHobby);
                         importedCount++;
                     }
                 }
@@ -334,9 +342,9 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 
     #region Methods
 
-    private void AddHobbies(List<Hobby> hobbies)
+    private void AddHobbies(List<IHobby> hobbies)
     {
-        foreach (Hobby hobby in hobbies)
+        foreach (IHobby hobby in hobbies)
         {
             var newHobby = _mapper.Map<IHobbyViewModel>(hobby);
             _hobbiesCollection.Add(newHobby);
@@ -402,11 +410,11 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Add:
-                AddHobbies(e.NewItems!.Cast<Hobby>().ToList());
+                AddHobbies(e.NewItems!.Cast<IHobby>().ToList());
                 break;
 
             case NotifyCollectionChangedAction.Remove:
-                RemoveHobbies(e.OldItems!.Cast<Hobby>().ToList());
+                RemoveHobbies(e.OldItems!.Cast<IHobby>().ToList());
                 break;
 
             case NotifyCollectionChangedAction.Reset:
@@ -415,8 +423,8 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
                 break;
 
             case NotifyCollectionChangedAction.Replace:
-                RemoveHobbies(e.OldItems!.Cast<Hobby>().ToList());
-                AddHobbies(e.NewItems!.Cast<Hobby>().ToList());
+                RemoveHobbies(e.OldItems!.Cast<IHobby>().ToList());
+                AddHobbies(e.NewItems!.Cast<IHobby>().ToList());
                 break;
 
             case NotifyCollectionChangedAction.Move:
@@ -448,9 +456,9 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         _hobbiesCollection.Move(oldStartingIndex, newStartingIndex);
     }
 
-    private void RemoveHobbies(List<Hobby> hobbies)
+    private void RemoveHobbies(List<IHobby> hobbies)
     {
-        foreach (Hobby hobby in hobbies)
+        foreach (IHobby hobby in hobbies)
         {
             var hobbyToRemove = _hobbiesCollection.FirstOrDefault(x => x.Id == hobby.Id);
 

@@ -77,6 +77,7 @@ public partial class App : Application
         serviceCollection.AddTransient<IHobbiesRepository, HobbiesRepository>();
         serviceCollection.AddTransient<IHobbyManager, HobbyManager>();
         serviceCollection.AddTransient<IMockDataService, MockDataService>();
+        serviceCollection.AddTransient<IHobby, Hobby>();
 
         var configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)

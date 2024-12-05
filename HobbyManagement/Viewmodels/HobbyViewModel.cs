@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HobbyManagement.Business;
 using HobbyManagment.Shared;
+using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Text;
@@ -13,19 +14,21 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
     #region Fields
 
     private readonly IMapper _mapper;
+    private readonly IServiceProvider _serviceProvider;
     private bool _isEditing;
     private bool _isUpdated;
-    private Hobby _wrappedHobby = default!;
+    private IHobby _wrappedHobby = default!;
     private IEditHobbyViewModel? editHobbyData;
 
     #endregion
 
     #region Constructors
 
-    public HobbyViewModel(IMapper mapper)
+    public HobbyViewModel(IMapper mapper, IServiceProvider serviceProvider)
     {
         _mapper = mapper;
-        SetWrappedHobby(new Hobby() { Name = "", Description = ""});
+        _serviceProvider = serviceProvider;
+        SetWrappedHobby(_serviceProvider.GetRequiredService<IHobby>());
     }
 
     #endregion
@@ -94,7 +97,7 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         }
     }
 
-    private Hobby WrappedHobby
+    private IHobby WrappedHobby
     {
         get
         {
@@ -195,14 +198,14 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         return true;
     }
 
-    public Hobby SaveEdit()
+    public IHobby SaveEdit()
     {
         if (!IsEditing || EditHobbyData == null)
         {
             throw new InvalidOperationException("Can't save edit when not editing.");
         }
 
-        var result = _mapper.Map<IEditHobbyViewModel, Hobby>(EditHobbyData);
+        var result = _mapper.Map<IEditHobbyViewModel, IHobby>(EditHobbyData);
         EndEdit();
         SetAsUpdated();
 
@@ -221,7 +224,7 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         timer.Start();
     }
 
-    public void SetWrappedHobby(Hobby hobby)
+    public void SetWrappedHobby(IHobby hobby)
     {
         WrappedHobby = hobby ?? throw new ArgumentNullException(nameof(hobby));
     }
@@ -242,15 +245,15 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
     {
         switch (e.PropertyName)
         {
-            case nameof(Hobby.Name):
+            case nameof(IHobby.Name):
                 RaisePropertyChanged(nameof(Name));
                 break;
 
-            case nameof(Hobby.Description):
+            case nameof(IHobby.Description):
                 RaisePropertyChanged(nameof(Description));
                 break;
 
-            case nameof(Hobby.Id):
+            case nameof(IHobby.Id):
                 RaisePropertyChanged(nameof(Id));
                 break;
         }

@@ -6,7 +6,7 @@ namespace HobbyManagement.Business;
 /// <summary>
 /// A class that represents a hobby and handles business logic.
 /// </summary>
-public class Hobby : ObservableObjectBase
+public class Hobby : ObservableObjectBase, IHobby
 {
     #region Fields
 
