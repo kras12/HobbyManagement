@@ -16,7 +16,7 @@ public class MockDataService : IMockDataService
     {
         try
         {
-            if (await _hobbyManager.HobbiesCount() == 0)
+            if (await _hobbyManager.GetHobbiesCountFromDatabase() == 0)
             {
                 List<Hobby> seedHobbies = new()
             {

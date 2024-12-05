@@ -10,7 +10,7 @@ public interface IHobbyManager
     ReadOnlyObservableCollection<Hobby> Hobbies { get; }
     Task CreateHobby(Hobby hobby);
     Task DeleteHobby(int Id);
-    Task<int> HobbiesCount();
+    Task<int> GetHobbiesCountFromDatabase();
     bool HobbyExists(string name, int? excludeHobbyId = null);
     Task LoadDataAsync();
     Task UpdateHobby(Hobby hobby);

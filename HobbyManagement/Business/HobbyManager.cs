@@ -81,6 +81,7 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
     }
 
     public async Task<int> HobbiesCount()
+    public async Task<int> GetHobbiesCountFromDatabase()
     {
         try
         {
