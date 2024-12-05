@@ -17,7 +17,17 @@ public class RelayCommand : ICommand
     /// <summary>
     /// Delegate for a parameterless action that executes the command.
     /// </summary>
-    private readonly Action _execute;
+    private readonly Action? _execute;
+
+    /// <summary>
+    /// Delegate for a parameterless async function that executes the command.
+    /// </summary>
+    private readonly Func<Task>? _executeTask;
+
+    /// <summary>
+    /// True while a command is executing. 
+    /// </summary>
+    private bool _isExecuting;
 
     #endregion
 
@@ -31,6 +41,17 @@ public class RelayCommand : ICommand
     public RelayCommand(Action execute, Func<bool>? canExecute = null)
     {
         _execute = execute;
+        _canExecute = canExecute;
+    }
+
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="executeTask">Delegate for a parameterless async function that executes the command.</param>
+    /// <param name="canExecute">Delegate for a function that returns true if the command can be executed. </param>
+    public RelayCommand(Func<Task> executeTask, Func<bool>? canExecute = null)
+    {
+        _executeTask = executeTask;
         _canExecute = canExecute;
     }
 
@@ -52,18 +73,35 @@ public class RelayCommand : ICommand
     /// <inheritdoc/>
     public bool CanExecute(object? input)
     {
-        if (_canExecute == null)
+        if (_isExecuting)
         {
-            return true;
+            return false;
         }
 
-        return _canExecute();
+        return _canExecute == null || _canExecute();
     }
 
     /// <inheritdoc/>
-    public void Execute(object? input)
+    public async void Execute(object? input)
     {
-        _execute();
+        try
+        {
+            _isExecuting = true;
+
+            if (_executeTask != null)
+            {
+                await _executeTask();
+            }
+            else if (_execute != null)
+            {
+                _execute();
+            }
+        }
+        finally
+        {
+            _isExecuting = false;
+        }
+        
     }
 
     #endregion

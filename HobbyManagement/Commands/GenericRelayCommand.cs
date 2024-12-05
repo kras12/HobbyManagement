@@ -18,7 +18,17 @@ public class GenericRelayCommand<T> : ICommand
     /// <summary>
     /// Delegate for an action taking a parameter of type <see cref="T"/> and executes the command.
     /// </summary>
-    private readonly Action<T> _execute;
+    private readonly Action<T>? _execute;
+
+    /// <summary>
+    /// Delegate for an async function taking a parameter of type <see cref="T"/> and executes the command.
+    /// </summary>
+    private readonly Func<T, Task>? _executeTask;
+
+    /// <summary>
+    /// True while a command is executing. 
+    /// </summary>
+    private bool _isExecuting;
 
     #endregion
 
@@ -27,11 +37,22 @@ public class GenericRelayCommand<T> : ICommand
     /// <summary>
     /// Constructor.
     /// </summary>
-    /// <param name="execute">Delegate for an action taking a parameter of type <see cref="T"/> and executes the action.</param>
+    /// <param name="executeTask">Delegate for an action taking a parameter of type <see cref="T"/> and executes the action.</param>
     /// <param name="canExecute">Delegate for a function that returns true if the command can be executed. </param>
-    public GenericRelayCommand(Action<T> execute, Func<T, bool>? canExecute = null)
+    public GenericRelayCommand(Action<T> executeTask, Func<T, bool>? canExecute = null)
     {
-        _execute = execute;
+        _execute = executeTask;
+        _canExecute = canExecute;
+    }
+
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="executeTask">Delegate for an async function taking a parameter of type <see cref="T"/> and executes the command.</param>
+    /// <param name="canExecute">Delegate for a function that returns true if the command can be executed. </param>
+    public GenericRelayCommand(Func<T, Task> executeTask, Func<T, bool>? canExecute = null)
+    {
+        _executeTask = executeTask;
         _canExecute = canExecute;
     }
 
@@ -67,11 +88,24 @@ public class GenericRelayCommand<T> : ICommand
     }
 
     /// <inheritdoc/>
-    public void Execute(object? input)
+    public async void Execute(object? input)
     {
-        if (input != null)
+        try
         {
-            _execute((T)input);
+            _isExecuting = true;
+
+            if (_executeTask != null)
+            {
+                await _executeTask((T)input!);
+            }
+            else if (_execute != null)
+            {
+                _execute((T)input!);
+            }
+        }
+        finally
+        {
+            _isExecuting = false;
         }
     }
 
