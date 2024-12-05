@@ -7,6 +7,8 @@ public class Hobby : ObservableObjectBase
 {
     private string description = "";
     private string name = "";
+    private int id;
+
     public Hobby()
     {
         
@@ -40,7 +42,20 @@ public class Hobby : ObservableObjectBase
         }
     }
 
-    public int Id { get; set; }
+    public int Id
+    {
+        get
+        {
+            return id; 
+        }
+
+
+        set
+        {
+            id = value;
+            RaisePropertyChanged(nameof(Id));
+        }
+    }
 
     public required string Name
     {
