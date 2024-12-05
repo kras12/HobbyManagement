@@ -277,7 +277,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 
                     if (!_hobbiesCollection.Any(x => x.Name == name.Value))
                     {
-                        await _hobbyManager.AddHobby(new Hobby(name: name!.Value, description: description!.Value));
+                        await _hobbyManager.CreateHobby(new Hobby(name: name!.Value, description: description!.Value));
                         importedCount++;
                     }
                 }
@@ -313,7 +313,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
             if (hobby.IsEmpty())
             {
                 _hobbiesCollection.Remove(hobby);
-                await _hobbyManager.AddHobby(updatedHobby);
+                await _hobbyManager.CreateHobby(updatedHobby);
                 ShowNotification("Hobby created.");
             }
             else

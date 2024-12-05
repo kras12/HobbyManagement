@@ -28,7 +28,7 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
 
     public ReadOnlyObservableCollection<Hobby> Hobbies { get; }
 
-    public async Task AddHobby(Hobby hobby)
+    public async Task CreateHobby(Hobby hobby)
     {
         if (HobbyExists(hobby.Name))
         {
@@ -158,7 +158,7 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
 
             foreach (var seedHobby in seedHobbies)
             {
-                await AddHobby(_mapper.Map<Hobby>(seedHobby));
+                await CreateHobby(_mapper.Map<Hobby>(seedHobby));
             }
         }
         catch (Exception ex)
