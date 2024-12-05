@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HobbyManagement.Viewmodels;
 using HobbyManagment.Data;
+using HobbyManagment.Data.Database.Models;
 
 namespace HobbyManagement.Mapping;
 
@@ -25,5 +26,7 @@ class AutoMapperProfile : Profile
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.EditName))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.EditDescription))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
+
+        CreateMap<HobbyEntity, Hobby>().ReverseMap();
     }
 }
