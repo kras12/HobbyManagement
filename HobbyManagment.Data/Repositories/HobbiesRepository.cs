@@ -28,12 +28,12 @@ public class HobbiesRepository : IHobbiesRepository
 
     public async Task<List<HobbyEntity>> GetAllAsync()
     {
-        return await _context.Hobbies.ToListAsync();
+        return await _context.Hobbies.AsNoTracking().ToListAsync();
     }
 
     public async Task<HobbyEntity?> GetAsync(int id)
     {
-        return await _context.Hobbies.FirstOrDefaultAsync(x => x.HobbyId == id);
+        return await _context.Hobbies.AsNoTracking().FirstOrDefaultAsync(x => x.HobbyId == id);
     }
 
     public async Task<bool> HobbyExists(string name)
@@ -45,6 +45,7 @@ public class HobbiesRepository : IHobbiesRepository
     {
         _context.Update(hobby);
         await _context.SaveChangesAsync();
+        _context.Entry(hobby).State = EntityState.Detached;
         return hobby;
     }
 }
