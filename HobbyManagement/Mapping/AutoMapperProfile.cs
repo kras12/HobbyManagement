@@ -27,6 +27,10 @@ class AutoMapperProfile : Profile
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.EditDescription))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
 
-        CreateMap<HobbyEntity, Hobby>().ReverseMap();
+        CreateMap<HobbyEntity, Hobby>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.HobbyId))
+            .ReverseMap();
     }
 }
