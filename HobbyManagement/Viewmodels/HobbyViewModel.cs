@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HobbyManagment.Data;
+using HobbyManagement.Business;
 using HobbyManagment.Shared;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;

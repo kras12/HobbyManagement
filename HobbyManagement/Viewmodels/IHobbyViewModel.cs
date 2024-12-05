@@ -1,4 +1,4 @@
-﻿using HobbyManagment.Data;
+﻿using HobbyManagement.Business;
 
 namespace HobbyManagement.Viewmodels;
 

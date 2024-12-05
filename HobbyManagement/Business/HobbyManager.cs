@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using HobbyManagment.Data;
 using HobbyManagment.Data.Database.Models;
 using HobbyManagment.Data.Repositories;
 using HobbyManagment.Shared;

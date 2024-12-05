@@ -1,7 +1,7 @@
 ﻿using HobbyManagment.Shared;
 using System.Diagnostics.CodeAnalysis;
 
-namespace HobbyManagment.Data;
+namespace HobbyManagement.Business;
 
 /// <summary>
 /// A class that represents a hobby and handles business logic.
@@ -90,7 +90,7 @@ public class Hobby : ObservableObjectBase
     {
         get
         {
-            return id; 
+            return id;
         }
 
 

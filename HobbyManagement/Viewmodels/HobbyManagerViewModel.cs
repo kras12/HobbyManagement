@@ -4,7 +4,6 @@ using HobbyManagement.Commands;
 using HobbyManagement.Services;
 using HobbyManagement.Services.Csv;
 using HobbyManagement.Services.Csv.Error;
-using HobbyManagment.Data;
 using HobbyManagment.Shared;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
