@@ -80,20 +80,6 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
         }
     }
 
-    public async Task<int> HobbiesCount()
-    public async Task<int> GetHobbiesCountFromDatabase()
-    {
-        try
-        {
-            return await _hobbiesRepository.HobbiesCount();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occured while getting hobbies count: {ex.Message}");
-            throw;
-        }
-    }
-
     public bool HobbyExists(string name, int? excludeHobbyId = null)
     {
         var query = _hobbies
