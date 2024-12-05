@@ -4,6 +4,9 @@ using System.Collections.Specialized;
 
 namespace HobbyManagement.Business;
 
+/// <summary>
+/// Interface for a hobby manager handling business logic. 
+/// </summary>
 public interface IHobbyManager
 {
     event NotifyCollectionChangedEventHandler HobbiesChanged;

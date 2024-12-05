@@ -3,8 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HobbyManagment.Data.Database;
+
+/// <summary>
+/// Configuration class for hobby entities. 
+/// </summary>
 internal class HobbyConfiguration : IEntityTypeConfiguration<HobbyEntity>
 {
+    /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<HobbyEntity> builder)
     {
         builder

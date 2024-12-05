@@ -5,8 +5,14 @@ using HobbyManagment.Data.Database.Models;
 
 namespace HobbyManagement.Mapping;
 
+/// <summary>
+/// Auto mapper profile. 
+/// </summary>
 class AutoMapperProfile : Profile
 {
+    /// <summary>
+    /// Constructors that creates the mappings. 
+    /// </summary>
     public AutoMapperProfile()
     {
         CreateMap<Hobby, IHobbyViewModel>()

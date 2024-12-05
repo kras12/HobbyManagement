@@ -1,11 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
+    <!-- Default brushes -->
     <SolidColorBrush x:Key="DefaultBackgroundBrush" Color="#FFF7FCFF"/>
     <SolidColorBrush x:Key="DefaultElementBackgroundBrush" Color="#FFD8E9F3"/>
 
+    <!-- Highlight brushes -->
     <SolidColorBrush x:Key="HighlightChangeBackgroundColor" Color="#FF8BF1D3"/>
 
+    <!-- Button brushes brushes -->
     <SolidColorBrush x:Key="ButtonBackground" Color="#FF8BC9F1"/>
     <SolidColorBrush x:Key="ButtonDangerBackground" Color="#FFEF6D6D"/>
     <SolidColorBrush x:Key="ButtonDangerForeground" Color="White"/>
@@ -13,8 +15,9 @@
     <SolidColorBrush x:Key="ButtonDisabledBackground" Color="#FF7CB3D6"/>
     <SolidColorBrush x:Key="ButtonDisabledForeground" Color="WhiteSmoke"/>
     <SolidColorBrush x:Key="ButtonMouseOverBackground" Color="#FFBDDFF5"/>
-    <SolidColorBrush x:Key="ButtonMouseOverBorder" Color="#FF6DB2DE"/>    
+    <SolidColorBrush x:Key="ButtonMouseOverBorder" Color="#FF6DB2DE"/>
 
+    <!-- Textbox/Message brushes -->
     <SolidColorBrush x:Key="TextBoxBackground" Color="#FFEEF6FB"/>
-    <SolidColorBrush x:Key="MessageBackground" Color="#FFA8C3D4"/>    
+    <SolidColorBrush x:Key="MessageBackground" Color="#FFA8C3D4"/>
 </ResourceDictionary>

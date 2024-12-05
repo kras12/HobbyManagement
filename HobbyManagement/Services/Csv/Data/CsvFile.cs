@@ -3,17 +3,45 @@ using System.Text.RegularExpressions;
 
 namespace HobbyManagement.Services.Csv.Data;
 
+/// <summary>
+/// Represents a Csv file.
+/// </summary>
 public class CsvFile
 {
+    #region Constructors
+    
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="csvColumns">A collection of columns for the file.</param>
+    /// <param name="csvRows">A collection of rows for the file.</param>
     private CsvFile(List<CsvColumn> csvColumns, List<CsvRow> csvRows)
     {
         CsvColumns = csvColumns;
         CsvRows = csvRows;
     }
 
+    #endregion
+
+    /// <summary>
+    /// The columns in the file.
+    /// </summary>
     public List<CsvColumn> CsvColumns { get; } = new();
+
+    /// <summary>
+    /// The rows in the file. 
+    /// </summary>
     public List<CsvRow> CsvRows { get; } = new();
 
+    #region Methods
+
+    /// <summary>
+    /// Creates a Csv file.
+    /// </summary>
+    /// <param name="csvContentRows">A collection of content rows design the file around.</param>
+    /// <returns><see cref="CsvFile"/></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="InvalidCsvFormatException"></exception>
     public static CsvFile CreateFile(List<string> csvContentRows)
     {
         if (csvContentRows.Count == 0)
@@ -46,6 +74,11 @@ public class CsvFile
         return new CsvFile(csvColumns, csvRows);
     }
 
+    /// <summary>
+    /// Extracts the cell values for a csv row. 
+    /// </summary>
+    /// <param name="row"></param>
+    /// <returns>A collection of strings.</returns>
     private static List<string> ExtractRowParts(string row)
     {
         var pattern = @"(?<=^|,)\s*""?(?<field>(?:[^""]|"""")*)""?\s*(?=,|$)";
@@ -59,4 +92,6 @@ public class CsvFile
 
         return result;
     }
+
+    #endregion
 }

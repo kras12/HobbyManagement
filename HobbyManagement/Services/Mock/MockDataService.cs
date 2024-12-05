@@ -4,17 +4,46 @@ using HobbyManagment.Data.Repositories;
 
 namespace HobbyManagement.Services.Mock;
 
+/// <summary>
+/// A service used to seed mock data to the database.
+/// </summary>
 public class MockDataService : IMockDataService
 {
+    #region Fields
+
+    /// <summary>
+    /// Injected repository for hobbies.
+    /// </summary>
     private readonly IHobbiesRepository _hobbiesRepository;
+
+    /// <summary>
+    /// Injected hobby manager.
+    /// </summary>
     private readonly IHobbyManager _hobbyManager;
 
+    #endregion
+
+    #region Constructors
+
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="hobbiesRepository">Injected repository for hobbies.</param>
+    /// <param name="hobbyManager"> Injected hobby manager.</param>
     public MockDataService(IHobbiesRepository hobbiesRepository, IHobbyManager hobbyManager)
     {
         _hobbiesRepository = hobbiesRepository;
         _hobbyManager = hobbyManager;
     }
 
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// Seeds mock hobbies to the database if it doesn't contain any hobbies.
+    /// </summary>
+    /// <returns></returns>
     public async Task TrySeedHobbies()
     {
         try
@@ -40,4 +69,6 @@ public class MockDataService : IMockDataService
             throw;
         }
     }
+
+    #endregion
 }

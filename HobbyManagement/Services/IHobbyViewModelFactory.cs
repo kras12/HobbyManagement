@@ -1,9 +1,16 @@
 ﻿using HobbyManagement.Viewmodels;
 
-namespace HobbyManagement.Services
+namespace HobbyManagement.Services;
+
+/// <summary>
+/// Interface for a factory service to create <see cref="IHobbyViewModel"/> objects.
+/// </summary>
+public interface IHobbyViewModelFactory
 {
-    public interface IHobbyViewModelFactory
-    {
-        IHobbyViewModel CreateHobbyViewModel();
-    }
+    /// <summary>
+    /// Creates a <see cref="IHobbyViewModel"/> object.
+    /// </summary>
+    /// <returns><see cref="IHobbyViewModel"/></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    IHobbyViewModel CreateHobbyViewModel();
 }

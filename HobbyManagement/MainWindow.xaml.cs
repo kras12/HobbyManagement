@@ -8,12 +8,13 @@ namespace HobbyManagement
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly IHobbyManagerViewModel _hobbyManagerViewModel;
-
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="hobbyManagerViewModel">Injected hobby manager view model.</param>
         public MainWindow(IHobbyManagerViewModel hobbyManagerViewModel)
         {
             InitializeComponent();
-            _hobbyManagerViewModel = hobbyManagerViewModel;
             DataContext = hobbyManagerViewModel;
         }
     }

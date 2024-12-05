@@ -20,24 +20,21 @@ namespace HobbyManagement;
 /// </summary>
 public partial class App : Application
 {
+    #region Fields
+
+    /// <summary>
+    /// The service provider.
+    /// </summary>
     private IServiceProvider _serviceProvider = default!;
 
-    protected override async void OnStartup(StartupEventArgs e)
-    {
-        base.OnStartup(e);
-        _serviceProvider = CreateServiceProvider();
+    #endregion
 
-#if DEBUG
-        var dbContext = _serviceProvider.GetService<ApplicationDbContext>();
-        dbContext.Database.Migrate();
+    #region Methods
 
-        var mockService = _serviceProvider.GetRequiredService<IMockDataService>();
-        await mockService.TrySeedHobbies();
-#endif
-
-        _serviceProvider.GetRequiredService<MainWindow>().Show();
-    }
-
+    /// <summary>
+    /// Adds Auto Mapper configuration to the service collection.
+    /// </summary>
+    /// <param name="serviceCollection">The service collection.</param>
     private void ConfigureAutoMapper(IServiceCollection serviceCollection)
     {
         serviceCollection.AddTransient<IMapper>((service) =>
@@ -52,6 +49,21 @@ public partial class App : Application
         });
     }
 
+    /// <summary>
+    /// Creates a service provider.
+    /// </summary>
+    /// <returns><see cref="IServiceProvider"/></returns>
+    private IServiceProvider CreateServiceProvider()
+    {
+        var serviceCollection = new ServiceCollection();
+        ConfigureServices(serviceCollection);
+        return serviceCollection.BuildServiceProvider();
+    }
+
+    /// <summary>
+    /// Adds services to the service collection. 
+    /// </summary>
+    /// <param name="serviceCollection">The service collection.</param>
     private void ConfigureServices(IServiceCollection serviceCollection)
     {
         ConfigureAutoMapper(serviceCollection);
@@ -64,7 +76,7 @@ public partial class App : Application
         serviceCollection.AddTransient<MainWindow>();
         serviceCollection.AddTransient<IHobbiesRepository, HobbiesRepository>();
         serviceCollection.AddTransient<IHobbyManager, HobbyManager>();
-        serviceCollection.AddTransient<IMockDataService , MockDataService>();
+        serviceCollection.AddTransient<IMockDataService, MockDataService>();
 
         var configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
@@ -77,10 +89,22 @@ public partial class App : Application
         });
     }
 
-    private IServiceProvider CreateServiceProvider()
+    /// <inheritdoc/>
+    protected override async void OnStartup(StartupEventArgs e)
     {
-        var serviceCollection = new ServiceCollection();
-        ConfigureServices(serviceCollection);
-        return serviceCollection.BuildServiceProvider();
+        base.OnStartup(e);
+        _serviceProvider = CreateServiceProvider();
+
+#if DEBUG
+        var dbContext = _serviceProvider.GetService<ApplicationDbContext>();
+        dbContext!.Database.Migrate();
+
+        var mockService = _serviceProvider.GetRequiredService<IMockDataService>();
+        await mockService.TrySeedHobbies();
+#endif
+
+        _serviceProvider.GetRequiredService<MainWindow>().Show();
     }
+
+    #endregion
 }

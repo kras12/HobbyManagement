@@ -4,6 +4,7 @@
         <ResourceDictionary Source="GlobalBrushes.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
+    <!-- Default button template -->
     <ControlTemplate x:Key="DefaultButtonTemplate" TargetType="Button">
         <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" 
                 Opacity="{TemplateBinding Opacity}" Padding="{TemplateBinding Padding}">
@@ -11,6 +12,7 @@
         </Border>
     </ControlTemplate>
 
+    <!-- Default button style -->
     <Style TargetType="Button" >
         <Style.Resources>
             <Style TargetType="Border">
@@ -35,6 +37,7 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Danger button style -->
     <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Background" Value="{StaticResource ButtonDangerBackground}"/>
         <Setter Property="Foreground" Value="{StaticResource ButtonDangerForeground}"/>
@@ -45,6 +48,7 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Close button style -->
     <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="#CC000000"/>
@@ -65,6 +69,7 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Textbox style -->
     <Style TargetType="TextBox">
         <Style.Resources>
             <Style TargetType="Border">
@@ -75,6 +80,7 @@
         <Setter Property="Padding" Value="5,4,5,4"/>
     </Style>
 
+    <!-- ListView style -->
     <Style TargetType="ListView">
         <Setter Property="Background" Value="{StaticResource DefaultElementBackgroundBrush}"/>
     </Style>
