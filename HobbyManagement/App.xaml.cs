@@ -1,5 +1,6 @@
 ﻿using AppSettings.Shared.Settings;
 using AutoMapper;
+using HobbyManagement.Business;
 using HobbyManagement.Mapping;
 using HobbyManagement.Services;
 using HobbyManagement.Services.Csv;
@@ -52,6 +53,7 @@ public partial class App : Application
         serviceCollection.AddSingleton<ICsvService, CsvService>();
         serviceCollection.AddTransient<MainWindow>();
         serviceCollection.AddTransient<IHobbiesRepository, HobbiesRepository>();
+        serviceCollection.AddTransient<IHobbyManager, HobbyManager>();
 
         var configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
