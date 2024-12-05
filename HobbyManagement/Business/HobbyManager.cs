@@ -133,7 +133,7 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
             }
 
             var updatedHobby = await _hobbiesRepository.Update(_mapper.Map<HobbyEntity>(hobby));
-            _mapper.Map(source: _mapper.Map<Hobby>(updatedHobby), destination: targetHobby);
+            _mapper.Map(source: updatedHobby, destination: targetHobby);
         }
         catch (Exception ex)
         {
