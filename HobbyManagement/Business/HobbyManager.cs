@@ -132,7 +132,7 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
                 throw new InvalidOperationException("The hobby was not found.");
             }
 
-            var updatedHobby = await _hobbiesRepository.Update(_mapper.Map<HobbyEntity>(targetHobby));
+            var updatedHobby = await _hobbiesRepository.Update(_mapper.Map<HobbyEntity>(hobby));
             _mapper.Map(source: _mapper.Map<Hobby>(updatedHobby), destination: targetHobby);
         }
         catch (Exception ex)
