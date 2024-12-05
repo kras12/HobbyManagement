@@ -31,6 +31,9 @@ class AutoMapperProfile : Profile
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.HobbyId))
-            .ReverseMap();
+            .ReverseMap()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.HobbyId, opt => opt.MapFrom(src => src.Id));
     }
 }
