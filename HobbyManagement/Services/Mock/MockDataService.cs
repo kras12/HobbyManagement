@@ -1,4 +1,5 @@
-﻿using HobbyManagment.Data;
+﻿using HobbyManagement.Business;
+using HobbyManagment.Data;
 using HobbyManagment.Data.Repositories;
 
 namespace HobbyManagement.Services.Mock;
@@ -6,10 +7,12 @@ namespace HobbyManagement.Services.Mock;
 public class MockDataService : IMockDataService
 {
     private readonly IHobbiesRepository _hobbiesRepository;
+    private readonly IHobbyManager _hobbyManager;
 
-    public MockDataService(IHobbiesRepository hobbiesRepository)
+    public MockDataService(IHobbiesRepository hobbiesRepository, IHobbyManager hobbyManager)
     {
         _hobbiesRepository = hobbiesRepository;
+        _hobbyManager = hobbyManager;
     }
 
     public async Task TrySeedHobbies()
