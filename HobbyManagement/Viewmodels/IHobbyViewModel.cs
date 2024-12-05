@@ -10,7 +10,7 @@ public interface IHobbyViewModel
     bool IsEditing { get; set; }
     string Name { get; }
     string HobbyAsCSV();
-    string HobbyHeaderAsCSV();
+    string HobbyHeaderNamesAsCsv();
     bool IsEmpty();
     public void SetAsUpdated();
     void SetWrappedHobby(Hobby hobby);

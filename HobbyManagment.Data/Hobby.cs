@@ -5,12 +5,17 @@ namespace HobbyManagment.Data;
 
 public class Hobby : ObservableObjectBase
 {
-    private string name = "";
     private string description = "";
-
+    private string name = "";
     public Hobby()
     {
         
+    }
+
+    [SetsRequiredMembers]
+    public Hobby(string name, string description) : this(id: 0, name:name, description: description)
+    {
+
     }
 
     [SetsRequiredMembers]
@@ -19,20 +24,6 @@ public class Hobby : ObservableObjectBase
         Id = id;
         Name = name;
         Description = description;
-    }
-
-    public required string Name
-    {
-        get
-        {
-            return name;
-        }
-
-        set
-        {
-            name = value;
-            RaisePropertyChanged(nameof(Name));
-        }
     }
 
     public required string Description
@@ -50,4 +41,18 @@ public class Hobby : ObservableObjectBase
     }
 
     public int Id { get; set; }
+
+    public required string Name
+    {
+        get
+        {
+            return name;
+        }
+
+        set
+        {
+            name = value;
+            RaisePropertyChanged(nameof(Name));
+        }
+    }
 }

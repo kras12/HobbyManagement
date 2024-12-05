@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HobbyManagement.Mapping;
 using HobbyManagement.Services;
+using HobbyManagement.Services.Csv;
 using HobbyManagement.Viewmodels;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
@@ -43,6 +44,7 @@ public partial class App : Application
         serviceCollection.AddTransient<IHobbyViewModel, HobbyViewModel>();
         serviceCollection.AddTransient<IEditHobbyViewModel, EditHobbyViewModel>();
         serviceCollection.AddSingleton<IHobbyViewModelFactory, HobbyViewModelFactory>();
+        serviceCollection.AddSingleton<ICsvService, CsvService>();
         serviceCollection.AddTransient<MainWindow>();
     }
 

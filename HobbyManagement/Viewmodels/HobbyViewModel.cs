@@ -3,6 +3,7 @@ using HobbyManagment.Data;
 using HobbyManagment.Shared;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Text;
 using System.Windows.Threading;
 
 namespace HobbyManagement.Viewmodels;
@@ -140,9 +141,32 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         return @$"""{Name}"", ""{Description}""";
     }
 
-    public string HobbyHeaderAsCSV()
+    public List<string> HobbyHeaderNames()
     {
-        return @$"""{nameof(Name)}"", ""{nameof(Description)}""";
+        return new List<string>()
+        {
+            $"{nameof(Name)}",
+            $"{nameof(Description)}"
+        };
+    }
+
+
+    public string HobbyHeaderNamesAsCsv()
+    {
+        string quoteString = @"""";
+        StringBuilder stringBuilder = new();
+
+        foreach (var headerName in HobbyHeaderNames())
+        {
+            if (stringBuilder.Length > 0 )
+            {
+                stringBuilder.Append(",");
+            }
+
+            stringBuilder.Append($"{quoteString}{headerName}{quoteString}");
+        }
+
+        return stringBuilder.ToString();
     }
 
     public bool IsEmpty()

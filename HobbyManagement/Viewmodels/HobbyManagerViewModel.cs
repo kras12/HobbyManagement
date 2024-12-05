@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using HobbyManagement.Commands;
 using HobbyManagement.Services;
+using HobbyManagement.Services.Csv;
+using HobbyManagement.Services.Csv.Error;
 using HobbyManagment.Data;
 using HobbyManagment.Shared;
-using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -20,6 +20,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 {
     #region Fields
 
+    private readonly ICsvService _csvService;
     private readonly ObservableCollection<IHobbyViewModel> _hobbiesCollection;
     private readonly HobbyManager _hobbyManager = new HobbyManager();
     private readonly IHobbyViewModelFactory _hobbyViewModelFactory;
@@ -30,15 +31,15 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     private bool _isLoadingData;
     private ObservableCollection<NotificationMessage> _notifications = new();
     private string _searchText = "";
-
     #endregion
 
     #region Constructors
 
-    public HobbyManagerViewModel(IHobbyViewModelFactory hobbyViewModelFactory, IMapper mapper)
+    public HobbyManagerViewModel(IHobbyViewModelFactory hobbyViewModelFactory, IMapper mapper, ICsvService csvService)
     {
         _hobbyViewModelFactory = hobbyViewModelFactory;
         _mapper = mapper;
+        _csvService = csvService;
 
         _hobbiesCollection = new ObservableCollection<IHobbyViewModel>();
         Hobbies = CollectionViewSource.GetDefaultView(_hobbiesCollection);
@@ -49,6 +50,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         AddHobbyCommand = new RelayCommand(AddEmptyHobby);
         CancelEditHobbyCommand = new GenericRelayCommand<HobbyViewModel>(CancelEditHobby, CanCancelEditHobby);
         DeleteHobbyCommand = new GenericRelayCommand<IHobbyViewModel>(DeleteHobby, CanDeleteHobby);
+        ImportHobbiesCommand = new RelayCommand(ImportHobbies);
         ExportHobbiesCommand = new RelayCommand(ExportHobbies, CanExportHobbies);
         RemoveNotificationCommand = new GenericRelayCommand<NotificationMessage>(RemoveNotification);
         SaveHobbyCommand = new GenericRelayCommand<HobbyViewModel>(SaveHobby, CanSaveHobby);
@@ -56,7 +58,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         StartEditHobbyCommand = new GenericRelayCommand<HobbyViewModel>(StartEditHobby, CanStartEditHobby);
 
         SetDefaultHobbyListSorting();
-        LoadDataAsync();
+        LoadDataAsync();        
     }
 
     #endregion
@@ -154,6 +156,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     public ICommand CancelEditHobbyCommand { get; }
     public ICommand DeleteHobbyCommand { get; }
     public ICommand ExportHobbiesCommand { get; }
+    public ICommand ImportHobbiesCommand { get; }
     public ICommand RemoveNotificationCommand { get; }
     public ICommand SaveHobbyCommand { get; }
     public ICommand SortGridViewByColumnCommand { get; }
@@ -211,6 +214,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     {
         return _hobbiesCollection.Count > 0;
     }
+
     private void DeleteHobby(IHobbyViewModel hobby)
     {
         if (CanDeleteHobby(hobby))
@@ -227,18 +231,65 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     {
         if (CanExportHobbies())
         {
-            SaveFileDialog saveFileDialog = new();
-            saveFileDialog.Filter = "CSV files (*.csv)|*.csv";
-            saveFileDialog.Title = "Export File";
-            saveFileDialog.OverwritePrompt = true;
-
-            if (saveFileDialog.ShowDialog() == true)
+            try
             {
-                ExportHobbiesAsCsv(_hobbiesCollection, saveFileDialog.FileName);
-                ShowNotification("Exported hobbies successfully.");
+                if (_csvService.TryWriteCsvFile(
+                () =>
+                {
+                    List<string> rows = [_hobbiesCollection[0].HobbyHeaderNamesAsCsv()];
+
+                    foreach (var hobby in _hobbiesCollection)
+                    {
+                        rows.Add(hobby.HobbyAsCSV());
+                    }
+
+                    return rows;
+                }))
+                {
+                    ShowNotification("Exported hobbies successfully.");
+                }
+            }
+            catch (Exception)
+            {
+                ShowNotification("An error occured during the export.");
             }
         }
     }
+
+    private void ImportHobbies()
+    {
+        try
+        {
+            if (_csvService.TryReadCsvFile(out var csvFile))
+            {
+                int importedCount = 0;
+
+                foreach (var row in csvFile.CsvRows)
+                {
+                    if (!row.TryGetCell(nameof(HobbyViewModel.Name), out var name) 
+                        || !row.TryGetCell(nameof(HobbyViewModel.Description), out var description))
+                    {
+                        ShowNotification("Invalid column names in the CSV file.");
+                        return;
+                    }
+
+                    if (!_hobbiesCollection.Any(x => x.Name == name.Value))
+                    {
+                        _hobbyManager.AddHobby(new Hobby(name: name!.Value, description: description!.Value));
+                        importedCount++;
+                    }
+                }
+
+                ShowNotification($"{importedCount} of {csvFile.CsvRows.Count} hobbies was imported.");
+            }
+        }
+        catch (InvalidCsvFormatException)
+        {
+            ShowNotification("Invalid CSV file format.");
+            return;
+        }
+    }
+
     private void RemoveNotification(NotificationMessage notification)
     {
         _notifications.Remove(notification);
@@ -291,15 +342,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
 
             if (!IsLoadingData)
             {
-                // We must let the UI render the row completely first to avoid an error.
-                Task.Run(async () =>
-                 {
-                     await Task.Delay(100);
-                     Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        newHobby.SetAsUpdated();
-                    });
-                });                
+                StartSafeUiActionAsync(newHobby.SetAsUpdated);             
             }
         }
     }
@@ -339,23 +382,6 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         }
 
         return 0;
-    }
-
-    private void ExportHobbiesAsCsv(IList<IHobbyViewModel> hobbies, string filePath)
-    {
-        if (hobbies.Count == 0)
-        {
-            throw new ArgumentException("The hobbies collection can't be empty", nameof(hobbies));
-        }
-
-        List<string> rows = [hobbies[0].HobbyHeaderAsCSV()];
-
-        foreach (var hobby in hobbies)
-        {
-            rows.Add(hobby.HobbyAsCSV());
-        }
-
-        File.WriteAllLines(filePath, rows);
     }
 
     private bool FilterHobbies(object item)
@@ -453,6 +479,19 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
             timer.Stop();
         };
         timer.Start();
+    }
+
+    private void StartSafeUiActionAsync(Action action)
+    {
+        // We must let the UI render the row completely first to avoid an error.
+        Task.Run(async () =>
+        {
+            await Task.Delay(100);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                action();
+            });
+        });
     }
 
     #endregion

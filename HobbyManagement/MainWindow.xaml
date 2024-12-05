@@ -17,6 +17,7 @@
                 <DockPanel DockPanel.Dock="Top">
                     <searchcontrols:SearchBox DockPanel.Dock="Left" SearchText="{Binding SearchText, Mode=TwoWay}" Width="200" HorizontalAlignment="Left"/>
                     <Button DockPanel.Dock="Right" Content="Export" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding ExportHobbiesCommand}"/>
+                    <Button DockPanel.Dock="Right" Content="Import" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Command="{Binding ImportHobbiesCommand}"/>
                 </DockPanel>
                 
                 <hobbylistcontrols:HobbyListControl Hobbies="{Binding Hobbies}" Notifications="{Binding Notifications}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
