@@ -19,6 +19,12 @@ namespace HobbyManagement.Viewmodels;
 
 public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewModel
 {
+    #region Constants
+
+    private const int SaveHobbyRowAnimationDurationInSeconds = 2;
+
+    #endregion
+
     #region Fields
 
     private readonly ICsvService _csvService;
@@ -33,6 +39,8 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     private ObservableCollection<NotificationMessage> _notifications = new();
     private string _searchText = "";
     private readonly IServiceProvider _serviceProvider;
+    private int _milliSecondsLeftOfHobbyRowAnimation;
+    private DispatcherTimer? _hobbyRowAnimationTimer = null;
 
     #endregion
 
@@ -58,7 +66,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         ExportHobbiesCommand = new RelayCommand(ExportHobbies, CanExportHobbies);
         RemoveNotificationCommand = new GenericRelayCommand<NotificationMessage>(RemoveNotification);
         SaveHobbyCommand = new GenericRelayCommand<HobbyViewModel>(SaveHobby, CanSaveHobby);
-        SortGridViewByColumnCommand = new GenericRelayCommand<string>(SortHobbyList);
+        SortGridViewByColumnCommand = new GenericRelayCommand<string>(SortHobbyList, CanSortHobbyList);
         StartEditHobbyCommand = new GenericRelayCommand<HobbyViewModel>(StartEditHobby, CanStartEditHobby);
 
         SetDefaultHobbyListSorting();
@@ -111,6 +119,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
             RaisePropertyChanged(nameof(IsGridViewSortOrderAscending));
         }
     }
+
     public bool IsLoadingData
     {
         get
@@ -138,6 +147,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
             RaisePropertyChanged(nameof(Notifications));
         }
     }
+
     public string SearchText
     {
         get
@@ -170,6 +180,11 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     #endregion
 
     #region CommandMethods 
+
+    private bool CanSortHobbyList(string column)
+    {
+        return _milliSecondsLeftOfHobbyRowAnimation <= 0;
+    }
 
     private static bool CanCancelEditHobby(HobbyViewModel hobby)
     {
@@ -310,7 +325,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         {
             if (_hobbyManager.HobbyExists(hobby.EditHobbyData!.EditName, excludeHobbyId: hobby.Id))
             {
-                // TODO - Add an error notication type
+                // TODO - Add an error notification type
                 ShowNotification("A hobby with that name already exists");
                 return;
             }
@@ -328,6 +343,25 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
                 await _hobbyManager.UpdateHobby(updatedHobby);
                 ShowNotification("Hobby updated.");
             }
+
+            _milliSecondsLeftOfHobbyRowAnimation = SaveHobbyRowAnimationDurationInSeconds * 1000 + 100;
+
+            if (_hobbyRowAnimationTimer == null)
+            {
+                _hobbyRowAnimationTimer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(100) };
+                _hobbyRowAnimationTimer.Tick += (sender, e) =>
+                {
+                    _milliSecondsLeftOfHobbyRowAnimation -= 100;
+
+                    if (_milliSecondsLeftOfHobbyRowAnimation <= 0)
+                    {
+                        _hobbyRowAnimationTimer.Stop();
+                        _hobbyRowAnimationTimer = null;
+                        CommandManager.InvalidateRequerySuggested();
+                    }                    
+                };
+                _hobbyRowAnimationTimer.Start();
+            }           
         }
     }
 
