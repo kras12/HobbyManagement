@@ -9,21 +9,52 @@ using System.Windows.Threading;
 
 namespace HobbyManagement.Viewmodels;
 
+/// <summary>
+/// View model for hobby.
+/// </summary>
 public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
 {
     #region Fields
 
+    /// <summary>
+    /// Injected data mapper.
+    /// </summary>
     private readonly IMapper _mapper;
+
+    /// <summary>
+    /// Injected service provider. 
+    /// </summary>
     private readonly IServiceProvider _serviceProvider;
+
+    /// <summary>
+    /// Backing field for property <see cref="IsEditing"/>.
+    /// </summary>
     private bool _isEditing;
+
+    /// <summary>
+    /// Backing field for property <see cref="IsUpdated"/>.
+    /// </summary>
     private bool _isUpdated;
+
+    /// <summary>
+    /// The wrapped <see cref="IHobby"/>.
+    /// </summary>
     private IHobby _wrappedHobby = default!;
+
+    /// <summary>
+    /// Backing field for property <see cref="EditHobbyData"/>.
+    /// </summary>
     private IEditHobbyViewModel? editHobbyData;
 
     #endregion
 
     #region Constructors
 
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="mapper">Injected data mapper.</param>
+    /// <param name="serviceProvider">Injected service provider.</param>
     public HobbyViewModel(IMapper mapper, IServiceProvider serviceProvider)
     {
         _mapper = mapper;
@@ -35,6 +66,9 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
 
     #region Properties
 
+    /// <summary>
+    /// The description of the hobby.
+    /// </summary>
     [Required]
     public string Description
     {
@@ -44,6 +78,9 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         }
     }
 
+    /// <summary>
+    /// Temporarily stores the new hobby data while editing a hobby. 
+    /// </summary>
     public IEditHobbyViewModel? EditHobbyData
     {
         get
@@ -58,8 +95,14 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         }
     }
 
+    /// <summary>
+    /// The ID of the hobby.
+    /// </summary>
     public int Id => WrappedHobby.Id;
 
+    /// <summary>
+    /// Returns true if the hobby is currently being edited. 
+    /// </summary>
     public bool IsEditing
     {
         get
@@ -74,6 +117,9 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         }
     }
 
+    /// <summary>
+    /// Returns true if the hobby was recently updated with new data.
+    /// </summary>
     public bool IsUpdated
     {
         get
@@ -88,6 +134,9 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         }
     }
 
+    /// <summary>
+    /// The name of the hobby.
+    /// </summary>
     [Required]
     public string Name
     {
@@ -97,6 +146,9 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         }
     }
 
+    /// <summary>
+    /// The underlying <see cref="IHobby"/> that is being wrapped. 
+    /// </summary>
     private IHobby WrappedHobby
     {
         get
@@ -125,11 +177,18 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
 
     #region Methods
 
+    /// <summary>
+    /// Cancels the edit mode. 
+    /// </summary>
     public void CancelEdit()
     {
         EndEdit();
     }
 
+    /// <summary>
+    /// Returns true if the hobby is in edit mode and have new valid data that can be saved. 
+    /// </summary>
+    /// <returns></returns>
     public bool CanSave()
     {
         // TODO - Implement better validation and messaging methods. 
@@ -139,29 +198,28 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
             && !string.IsNullOrEmpty(EditHobbyData.EditDescription);
     }
 
+    /// <summary>
+    /// Returns a csv string representation of the hobby data. 
+    /// </summary>
+    /// <returns><see cref="string"/></returns>
     public string HobbyAsCSV()
     {
         return @$"""{Name}"", ""{Description}""";
     }
 
-    public List<string> HobbyHeaderNames()
-    {
-        return new List<string>()
-        {
-            $"{nameof(Name)}",
-            $"{nameof(Description)}"
-        };
-    }
-
-
-    public string HobbyHeaderNamesAsCsv()
+    /// <summary>
+    /// Returns a csv string containing the attributes of a hobby.
+    /// </summary>
+    /// <remarks>Names are enclosed in quotes.</remarks>
+    /// <returns><see cref="string"/></returns>
+    public string HobbyAttributesAsCsvHeader()
     {
         string quoteString = @"""";
         StringBuilder stringBuilder = new();
 
-        foreach (var headerName in HobbyHeaderNames())
+        foreach (var headerName in HobbyAttributesAsHeaderList())
         {
-            if (stringBuilder.Length > 0 )
+            if (stringBuilder.Length > 0)
             {
                 stringBuilder.Append(",");
             }
@@ -172,6 +230,23 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         return stringBuilder.ToString();
     }
 
+    /// <summary>
+    /// Returns a collection of header names that describes the attributes of a hobby.
+    /// </summary>
+    /// <returns>A collection of <see cref="string"/>.</returns>
+    public List<string> HobbyAttributesAsHeaderList()
+    {
+        return new List<string>()
+        {
+            $"{nameof(Name)}",
+            $"{nameof(Description)}"
+        };
+    }
+
+    /// <summary>
+    /// Returns true if the required attributes of a hobby is not set. 
+    /// </summary>
+    /// <returns><see cref="bool"/></returns>
     public bool IsEmpty()
     {
         foreach (PropertyInfo property in typeof(HobbyViewModel).GetProperties())
@@ -198,6 +273,11 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         return true;
     }
 
+    /// <summary>
+    /// Returns a new instance of <see cref="IHobby>"/> containing the new hobby attributes provided in the edit mode. 
+    /// </summary>
+    /// <returns><see cref="IHobby"/></returns>
+    /// <exception cref="InvalidOperationException"></exception>
     public IHobby SaveEdit()
     {
         if (!IsEditing || EditHobbyData == null)
@@ -212,6 +292,9 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         return result;
     }
 
+    /// <summary>
+    /// Temporarily marks this hobby as having new attribute values. 
+    /// </summary>
     public void SetAsUpdated()
     {
         IsUpdated = true;
@@ -224,23 +307,39 @@ public class HobbyViewModel : ObservableObjectBase, IHobbyViewModel
         timer.Start();
     }
 
+    /// <summary>
+    /// Sets the <see cref="IHobby"/> that is being wrapped. 
+    /// </summary>
+    /// <param name="hobby">The hobby to wrap.</param>
+    /// <exception cref="ArgumentNullException"></exception>
     public void SetWrappedHobby(IHobby hobby)
     {
         WrappedHobby = hobby ?? throw new ArgumentNullException(nameof(hobby));
     }
 
+    /// <summary>
+    /// Starts the editing mode. 
+    /// </summary>
     public void StartEdit()
     {
         EditHobbyData = _mapper.Map<IHobbyViewModel, IEditHobbyViewModel>(this);
         IsEditing = true;
     }
 
+    /// <summary>
+    /// Ends the editing mode.
+    /// </summary>
     private void EndEdit()
     {
         EditHobbyData = null;
         IsEditing = false;
     }
 
+    /// <summary>
+    /// Event handler for property changes in the wrapped <see cref="IHobby"/>.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event parameter containing the changes.</param>
     private void HobbyPropertyChangedEventHandler(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)

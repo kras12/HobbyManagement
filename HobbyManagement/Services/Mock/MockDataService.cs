@@ -46,7 +46,7 @@ public class MockDataService : IMockDataService
     /// <summary>
     /// Seeds mock hobbies to the database if it doesn't contain any hobbies.
     /// </summary>
-    /// <returns></returns>
+    /// <returns><see cref="Task"/><returns>
     public async Task TrySeedHobbies()
     {
         try

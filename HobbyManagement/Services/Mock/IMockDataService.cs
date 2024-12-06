@@ -6,5 +6,9 @@ namespace HobbyManagement.Services.Mock;
 /// </summary>
 public interface IMockDataService
 {
+    /// <summary>
+    /// Seeds mock hobbies to the database if it doesn't contain any hobbies.
+    /// </summary>
+    /// <returns><see cref="Task"/><returns>
     Task TrySeedHobbies();
 }

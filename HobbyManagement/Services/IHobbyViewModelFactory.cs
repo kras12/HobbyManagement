@@ -11,6 +11,5 @@ public interface IHobbyViewModelFactory
     /// Creates a <see cref="IHobbyViewModel"/> object.
     /// </summary>
     /// <returns><see cref="IHobbyViewModel"/></returns>
-    /// <exception cref="InvalidOperationException"></exception>
     IHobbyViewModel CreateHobbyViewModel();
 }

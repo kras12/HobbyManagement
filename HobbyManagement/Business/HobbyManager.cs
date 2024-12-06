@@ -63,7 +63,7 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
     #region Properties
 
     /// <summary>
-    /// A readonly and observable collection of hobbies. 
+    /// A collection of hobbies being managed.
     /// </summary>
     public ReadOnlyObservableCollection<IHobby> Hobbies { get; }
 
@@ -137,11 +137,11 @@ public class HobbyManager : ObservableObjectBase, IHobbyManager
     }
 
     /// <summary>
-    /// Checks whether a hobby exists in the collection.
+    /// Checks whether a hobby exists.
     /// </summary>
     /// <param name="name">The name of the hobby.</param>
     /// <param name="excludeHobbyId">An optional ID of a hobby to ignore.</param>
-    /// <returns></returns>
+    /// <returns>True if the hobby exists.</returns>
     public bool HobbyExists(string name, int? excludeHobbyId = null)
     {
         var query = _hobbies
