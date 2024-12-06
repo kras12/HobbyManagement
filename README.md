@@ -20,61 +20,56 @@ Features:
 ### Filter - C#
 ![Filter - C#](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/2-2-Filter.png)
 
-### Filter - Sort - Name - Ascending
+### Sort - Name - Ascending
 ![Filter - Sort - Name - Ascending](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/3-1-Sort-Name-Asc.png)
 
-### Filter - Sort - Name - Descending
+### Sort - Name - Descending
 ![Filter - Sort - Name - Descending](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/3-2-Sort-Name-Desc.png)
 
-### Filter - Sort - Description - Ascending
+### Sort - Description - Ascending
 ![Filter - Sort - Description - Ascending](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/3-3-Sort-Description-Asc.png)
 
-### Filter - Sort - Description - Descending
+### Sort - Description - Descending
 ![Filter - Sort - Description - Descending](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/3-4-Sort-Description-Desc.png)
 
-### Filter - Add new hobby - 1
+### Add new hobby - 1
 ![Filter - Add new hobby - 1](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/4-1-Add.png)
 
-### Filter - Add new hobby - 2
+### Add new hobby - 2
 ![Filter - Add new hobby - 2](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/4-2-Add.png)
 
-### Filter - Add new hobby - 3
+### Add new hobby - 3
 ![Filter - Add new hobby - 3](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/4-3-Add.png)
 
-### Filter - Edit hobby - 1
+### Edit hobby - 1
 ![Filter - Edit hobby - 1](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/5-1-Edit.png)
 
-### Filter - Edit hobby - 2
+### Edit hobby - 2
 ![Filter - Edit hobby - 2](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/5-2-Edit.png)
 
-### Filter - Edit hobby - 3
+### Edit hobby - 3
 ![Filter - Edit hobby - 3](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/5-3-Edit.png)
 
-### Filter - Delete hobby - 1
+### Delete hobby - 1
 ![Filter - Delete hobby - 1](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/6-1-Delete.png)
 
-### Filter - Delete hobby - 2
+### Delete hobby - 2
 ![Filter - Delete hobby - 2](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/6-2-Delete.png)
 
-### Filter - Export hobby - 1
+### Export hobby - 1
 ![Filter - Export hobby - 1](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/7-1-Export.png)
 
-### Filter - Export hobby - 2
+### Export hobby - 2
 ![Filter - Export hobby - 2](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/7-2-Export.png)
 
-### Filter - Export hobby - 3
+### Export hobby - 3
 ![Filter - Export hobby - 3](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/7-3-Export.png)
 
-### Filter - Import hobby - 1
+### Import hobby - 1
 ![Filter - Import hobby - 1](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/8-1-Import.png)
 
-### Filter - Import hobby - 2
+### Import hobby - 2
 ![Filter - Import hobby - 2](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/8-2-Import.png)
 
-### Filter - Import hobby - 3
+### Import hobby - 3
 ![Filter - Import hobby - 3](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/8-3-Import.png)
-
-
-
-
-
