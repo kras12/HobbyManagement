@@ -381,7 +381,11 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         if (hobby.IsEditing)
         {
             hobby.CancelEdit();
-            _hobbiesCollection.Remove(hobby);
+
+            if (hobby.IsEmpty())
+            {
+                _hobbiesCollection.Remove(hobby);
+            }
         }
     }
 
