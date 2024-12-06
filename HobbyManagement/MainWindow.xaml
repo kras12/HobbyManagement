@@ -24,7 +24,7 @@
                     GridViewSortedByColumn="{Binding GridViewSortedByColumn}" IsGridViewSortOrderAscending="{Binding IsGridViewSortOrderAscending}"
                     CreateHobbyCommand="{Binding CreateHobbyCommand}" CancelEditHobbyCommand="{Binding CancelEditHobbyCommand}" DeleteHobbyCommand="{Binding DeleteHobbyCommand}" 
                     RemoveNotificationCommand="{Binding RemoveNotificationCommand}" SaveHobbyCommand="{Binding SaveHobbyCommand}" 
-                    SortGridViewByColumnCommand="{Binding SortGridViewByColumnCommand}" StartEditHobbyCommand="{Binding StartEditHobbyCommand}"/>
+                    SortHobbiesListByColumnCommand="{Binding SortHobbiesListByColumnCommand}" StartEditHobbyCommand="{Binding StartEditHobbyCommand}"/>
             </DockPanel>
         </Grid>
     </Border>

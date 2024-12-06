@@ -75,7 +75,7 @@
     <!-- Sortable column -->
     <DataTemplate x:Key="SortableGridViewHeader">
         <Button x:Name="HeaderButton" Content="{Binding}" 
-            Command="{Binding DataContext.SortGridViewByColumnCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}">
+            Command="{Binding DataContext.SortHobbiesListByColumnCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="Transparent" >

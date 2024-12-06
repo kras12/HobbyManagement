@@ -60,7 +60,7 @@ public interface IHobbyManagerViewModel
     /// <summary>
     /// The command to sort the hobbies list by a column.
     /// </summary>
-    ICommand SortGridViewByColumnCommand { get; }
+    ICommand SortHobbiesListByColumnCommand { get; }
 
     /// <summary>
     /// The command to start editing a hobby. 

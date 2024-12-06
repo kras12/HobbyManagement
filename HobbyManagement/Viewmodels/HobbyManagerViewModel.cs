@@ -138,7 +138,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         ExportHobbiesCommand = new RelayCommand(ExportHobbies, CanExportHobbies);
         RemoveNotificationCommand = new GenericRelayCommand<NotificationMessage>(RemoveNotification);
         SaveHobbyCommand = new GenericRelayCommand<HobbyViewModel>(SaveHobby, CanSaveHobby);
-        SortGridViewByColumnCommand = new GenericRelayCommand<string>(SortHobbyList, CanSortHobbyList);
+        SortHobbiesListByColumnCommand = new GenericRelayCommand<string>(SortHobbyList, CanSortHobbyList);
         StartEditHobbyCommand = new GenericRelayCommand<HobbyViewModel>(StartEditHobby, CanStartEditHobby);
 
         SetDefaultHobbyListSorting();
@@ -296,7 +296,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     /// <summary>
     /// The command to sort the hobbies list by a column.
     /// </summary>
-    public ICommand SortGridViewByColumnCommand { get; }
+    public ICommand SortHobbiesListByColumnCommand { get; }
 
     /// <summary>
     /// The command to start editing a hobby. 
@@ -308,7 +308,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     #region CommandMethods 
 
     /// <summary>
-    /// Checks whether the <see cref="SortGridViewByColumnCommand"/> command can be executed.
+    /// Checks whether the <see cref="SortHobbiesListByColumnCommand"/> command can be executed.
     /// </summary>
     /// <param name="column">The name of the column to sort by.</param>
     /// <returns>True if the command can be executed.</returns>
@@ -562,7 +562,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     /// <summary>
     /// Sorts the hobby list by a column. 
     /// </summary>
-    /// <remarks>Performs the operations of the <see cref="SortGridViewByColumnCommand"/> command.</remarks>
+    /// <remarks>Performs the operations of the <see cref="SortHobbiesListByColumnCommand"/> command.</remarks>
     /// <param name="columnName">The name of the column to sort by.</param>
     private void SortHobbyList(string columnName)
     {

@@ -75,10 +75,10 @@ public partial class HobbyListControl : UserControl
         DependencyProperty.Register("SaveHobbyCommand", typeof(ICommand), typeof(HobbyListControl), new PropertyMetadata(null));
 
     /// <summary>
-    /// Dependency property controlled by property <see cref="SortGridViewByColumnCommand"/>.
+    /// Dependency property controlled by property <see cref="SortHobbiesListByColumnCommand"/>.
     /// </summary>
-    public static readonly DependencyProperty SortGridViewByColumnCommandProperty =
-        DependencyProperty.Register("SortGridViewByColumnCommand", typeof(ICommand), typeof(HobbyListControl), new PropertyMetadata(null));
+    public static readonly DependencyProperty SortHobbiesListByColumnCommandProperty =
+        DependencyProperty.Register("SortHobbiesListByColumnCommand", typeof(ICommand), typeof(HobbyListControl), new PropertyMetadata(null));
 
     /// <summary>
     /// Dependency property controlled by property <see cref="StartEditHobbyCommand"/>.
@@ -174,10 +174,10 @@ public partial class HobbyListControl : UserControl
     /// <summary>
     /// Command to toggle sort order on grid view column. 
     /// </summary>
-    public ICommand SortGridViewByColumnCommand
+    public ICommand SortHobbiesListByColumnCommand
     {
-        get => (ICommand)GetValue(SortGridViewByColumnCommandProperty);
-        set => SetValue(SortGridViewByColumnCommandProperty, value);
+        get => (ICommand)GetValue(SortHobbiesListByColumnCommandProperty);
+        set => SetValue(SortHobbiesListByColumnCommandProperty, value);
     }
 
     /// <summary>
