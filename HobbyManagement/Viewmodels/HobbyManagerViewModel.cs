@@ -131,7 +131,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
         ((ListCollectionView)Hobbies).CustomSort = Comparer<IHobbyViewModel>.Create(CompareHobbySortOrder);
         _hobbyManager.HobbiesChanged += HobbiesChangedEventHandler;
 
-        AddHobbyCommand = new RelayCommand(AddEmptyHobby);
+        CreateHobbyCommand = new RelayCommand(AddEmptyHobby);
         CancelEditHobbyCommand = new GenericRelayCommand<HobbyViewModel>(CancelEditHobby, CanCancelEditHobby);
         DeleteHobbyCommand = new GenericRelayCommand<IHobbyViewModel>(DeleteHobby, CanDeleteHobby);
         ImportHobbiesCommand = new RelayCommand(ImportHobbies);
@@ -260,7 +260,7 @@ public class HobbyManagerViewModel : ObservableObjectBase, IHobbyManagerViewMode
     /// The command to create a new empty hobby in edit mode. 
     /// Saving the hobby will create a new hobby. 
     /// </summary>
-    public ICommand AddHobbyCommand { get; } 
+    public ICommand CreateHobbyCommand { get; } 
 
     /// <summary>
     /// The command to cancel the process of editing a hobby. 

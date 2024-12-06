@@ -22,17 +22,16 @@ public partial class HobbyListControl : UserControl
     #region DependencyProperties
 
     /// <summary>
-    /// Dependency property controlled by property <see cref="AddHobbyCommand"/>.
-    /// </summary>
-    public static readonly DependencyProperty AddHobbyCommandProperty =
-        DependencyProperty.Register("AddHobbyCommand", typeof(ICommand), typeof(HobbyListControl), new PropertyMetadata(null));
-
-    /// <summary>
     /// Dependency property controlled by property <see cref="CancelEditHobbyCommand"/>.
     /// </summary>
     public static readonly DependencyProperty CancelEditHobbyCommandProperty =
         DependencyProperty.Register("CancelEditHobbyCommand", typeof(ICommand), typeof(HobbyListControl), new PropertyMetadata(null));
 
+    /// <summary>
+    /// Dependency property controlled by property <see cref="CreateHobbyCommand"/>.
+    /// </summary>
+    public static readonly DependencyProperty CreateHobbyCommandProperty =
+        DependencyProperty.Register("CreateHobbyCommand", typeof(ICommand), typeof(HobbyListControl), new PropertyMetadata(null));
     /// <summary>
     /// Dependency property controlled by property <see cref="DeleteHobbyCommand"/>.
     /// </summary>
@@ -92,21 +91,21 @@ public partial class HobbyListControl : UserControl
     #region Properties
 
     /// <summary>
-    /// Command to add a hobby.
-    /// </summary>
-    public ICommand AddHobbyCommand
-    {
-        get => (ICommand)GetValue(AddHobbyCommandProperty);
-        set => SetValue(AddHobbyCommandProperty, value);
-    }
-
-    /// <summary>
     /// Command to cancel editing of a hobby.
     /// </summary>
     public ICommand CancelEditHobbyCommand
     {
         get => (ICommand)GetValue(CancelEditHobbyCommandProperty);
         set => SetValue(CancelEditHobbyCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Command to create a hobby.
+    /// </summary>
+    public ICommand CreateHobbyCommand
+    {
+        get => (ICommand)GetValue(CreateHobbyCommandProperty);
+        set => SetValue(CreateHobbyCommandProperty, value);
     }
 
     /// <summary>

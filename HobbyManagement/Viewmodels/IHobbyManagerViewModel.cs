@@ -7,15 +7,15 @@ namespace HobbyManagement.Viewmodels;
 public interface IHobbyManagerViewModel
 {
     /// <summary>
-    /// The command to create a new empty hobby in edit mode. 
-    /// Saving the hobby will create a new hobby. 
-    /// </summary>
-    ICommand AddHobbyCommand { get; }
-
-    /// <summary>
     /// The command to cancel the process of editing a hobby. 
     /// </summary>
     ICommand CancelEditHobbyCommand { get; }
+
+    /// <summary>
+    /// The command to create a new empty hobby in edit mode. 
+    /// Saving the hobby will create a new hobby. 
+    /// </summary>
+    ICommand CreateHobbyCommand { get; }
 
     /// <summary>
     /// The command to delete a hobby. 
