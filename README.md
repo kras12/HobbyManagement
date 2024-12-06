@@ -14,8 +14,8 @@ Features:
 ### Start screen
 ![Start screen of Hobby Management](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/1-Init.png)
 
-### Filter - Programming
-![Filter - Programming](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/2-1-Filter.png)
+### Filter - Lifting
+![Filter - Lifting](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/2-1-Filter.png)
 
 ### Filter - C#
 ![Filter - C#](https://github.com/kras12/HobbyManagement/blob/master/HobbyManagement/Screenshots/2-2-Filter.png)
